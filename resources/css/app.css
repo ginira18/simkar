@@ -1,0 +1,7 @@
+/* vendors */
+@import './vendors/simple-line-icons/css/simple-line-icons.css';
+@import './vendors/flag-icon-css/css/flag-icon.min.css';
+@import './vendors/css/vendor.bundle.base.css';
+@import './vendors/chartist/chartist.min.css';
+
+@import 'style.css';
