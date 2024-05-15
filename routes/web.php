@@ -17,11 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {return view('dashboard');});
 
 // Karyawan
-Route::get('/daftar_karyawan', function () {return view('daftar_karyawan');});
-Route::get('/tambah_karyawan', function () {return view('tambah_karyawan');});
-Route::get('/detail_karyawan', function () {return view('detail_karyawan');});
-Route::get('/pengaturan_karyawan', function () {return view('pengaturan_karyawan');});
-Route::get('/pengaturan_detail_karyawan', function () {return view('pengaturan_detail_karyawan');});
+Route::get('/daftar_karyawan', function () {return view('karyawan/daftar_karyawan');});
+Route::get('/tambah_karyawan', function () {return view('karyawan/tambah_karyawan');});
+Route::get('/detail_karyawan', function () {return view('karyawan/detail_karyawan');});
+Route::get('/pengaturan_menu', function () {return view('karyawan/pengaturan/pengaturan_menu');});
+Route::get('/pengaturan_detail_karyawan', function () {return view('karyawan/pengaturan/pengaturan_detail_karyawan');});
 
 // Presensi
 Route::get('/menu_kehadiran', function () {return view('kehadiran/menu_kehadiran');});

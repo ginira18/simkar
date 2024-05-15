@@ -73,7 +73,7 @@
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item"> <a class="nav-link" href="/daftar_karyawan">Daftar Karyawan</a></li>
                                 {{-- <li class="nav-item"> <a class="nav-link" href="/rfid">RFID</a></li> --}}
-                                <li class="nav-item"> <a class="nav-link" href="/pengaturan_karyawan">Pengaturan</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="/pengaturan_menu">Pengaturan</a></li>
                             </ul>
                         </div>
                     </li>
@@ -127,6 +127,7 @@
     <script src="{{ asset('./vendors/moment/moment.min.js') }}"></script>
     <script src="{{ asset('./vendors/chart.js/Chart.min.js') }}"></script>
     <script src="{{ asset('./vendors/chartist/chartist.min.js') }}"></script>
+    <script src="{{ asset('./vendors/misc.js') }}"></script>
     @vite(['resources/js/app.js'])
     {{-- <script src="{{ asset('./vendors/chart.js/Chart.min.js') }}"></script>
     <script src="{{ asset('./vendors/chartist/chartist.min.js') }}"></script> --}}

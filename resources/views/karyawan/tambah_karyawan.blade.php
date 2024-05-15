@@ -63,9 +63,17 @@
 
                         {{-- kanan --}}
                         <div class="col-md-6">
+                            <label class="col-sm-6 col-form-label required">pendidikan Terakhir</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" required />
+                            </div>
                             <label class="col-sm-6 col-form-label required">Tanggal Bergabung</label>
                             <div class="col-sm-9">
-                                <input class="form-control" required placeholder="dd/mm/yyyy" />
+                                <input type="date" class="form-control" required placeholder="dd/mm/yyyy" />
+                            </div>
+                            <label class="col-sm-6 col-form-label required">Masa Kontrak</label>
+                            <div class="col-sm-9">
+                                <input type="date" class="form-control" required placeholder="dd/mm/yyyy" />
                             </div>
                             <label class="col-sm-6 col-form-label required">Bagian</label>
                             <div class="col-sm-9">
@@ -104,17 +112,45 @@
                                     </div>
                                 </div>
                             </div>
-                            {{-- <label class="col-sm-6 col-form-label">RFID</label>
-                            <div class="col-9">
+                            <div class="col-md-9">
+                                <div class="form-group row mb-0">
+                                    <label class="col-sm-3 col-form-label">Membership</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="membershipRadios"
+                                                    id="membershipRadios1" value=""> Free
+                                            </label>
+                                        </div>
+                                        {{-- <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="membershipRadios"
+                                                    id="membershipRadios1" value="" checked=""> Free <i
+                                                    class="input-helper"></i></label>
+                                        </div> --}}
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="membershipRadios"
+                                                    id="membershipRadios2" value="option2"> Professional </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <label class="col-sm-6 col-form-label">RFID</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" />
+                                {{-- <div class="col-9 pl-0 col-form-label">
                                 <button type="button" class="btn btn-outline-danger btn-icon-text" data-toggle="modal"
                                     data-target="#modal_tambah_RFID">
                                     <i class="icon-cloud-upload btn-icon-prepend"></i> Daftarkan RFID </button>
                             </div> --}}
-                            <div class="text- mt-4 col-9">
-                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                <div class="text- mt-4 col-9">
+                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
                 </form>
             </div>
         </div>
@@ -125,7 +161,7 @@
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="text-align: center">
-                <div class="modal-header" >
+                <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Tambah RFID</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -139,6 +175,7 @@
                             </label>
                             <input type="text" class="form-control">
                         </div>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
                     </form>
                 </div>
             </div>

@@ -104,18 +104,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <label class="col-sm-6 col-form-label ">Status RFID</label>
+                            <label class="col-sm-6 col-form-label ">RFID</label>
                             <div class="col-sm-9">
-                                <label class="badge badge-success">Terdaftar</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" readonly />
+                                </div>
+                                <label class="badge badge-danger">Belum terdaftar</label>
                                 <div class="col-9 p-0 mt-2">
                                     <button type="button" class="btn btn-outline-danger btn-icon-text" data-toggle="modal"
                                         data-target="#modal_tambah_RFID">
-                                        <i class="icon-cloud-upload btn-icon-prepend"></i> Perbarui RFID </button>
-                                </div>
-                                <div class="card-description mt-3 ">
-                                    <code>
-                                *Pilih bagian karyawan aktif untuk mengaktifkan kembali status karyawan
-                                    </code>
+                                        <i class="icon-cloud-upload btn-icon-prepend"></i> Daftarkan RFID </button>
                                 </div>
                                 <div class="text- mt-4 col-9 p-0">
                                     <button type="submit" class="btn btn-primary">Simpan</button>
@@ -146,6 +144,7 @@
                             </label>
                             <input type="text" class="form-control">
                         </div>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
                     </form>
                 </div>
             </div>
