@@ -71,7 +71,8 @@
                         </a>
                         <div class="collapse" id="karyawan">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link" href="/daftar_karyawan">Daftar Karyawan</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="/daftar_karyawan">Daftar Karyawan</a>
+                                </li>
                                 {{-- <li class="nav-item"> <a class="nav-link" href="/rfid">RFID</a></li> --}}
                                 <li class="nav-item"> <a class="nav-link" href="/pengaturan_menu">Pengaturan</a></li>
                             </ul>
@@ -84,12 +85,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/gaji">
-                            <span class="menu-title">Gaji</span>
-                            <i class="icon-globe menu-icon"></i>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" data-toggle="collapse" href="#laporan" aria-expanded="false"
                             aria-controls="laporan">
                             <span class="menu-title">Laporan</span>
@@ -97,11 +92,22 @@
                         </a>
                         <div class="collapse" id="laporan">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link" href="/laporan_gaji">Laporan Gaji</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="/laporan_karyawan">Laporan Karyawan</a></li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/laporan_gaji">Laporan Gaji</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/laporan_karyawan">Laporan Karyawan</a>
+                                </li>
                             </ul>
                         </div>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/gaji">
+                            <span class="menu-title">Gaji</span>
+                            <i class="icon-globe menu-icon"></i>
+                        </a>
+                    </li>
+
                 </ul>
             </nav>
             <div class="main-panel">
@@ -127,7 +133,6 @@
     <script src="{{ asset('./vendors/moment/moment.min.js') }}"></script>
     <script src="{{ asset('./vendors/chart.js/Chart.min.js') }}"></script>
     <script src="{{ asset('./vendors/chartist/chartist.min.js') }}"></script>
-    <script src="{{ asset('./vendors/misc.js') }}"></script>
     @vite(['resources/js/app.js'])
     {{-- <script src="{{ asset('./vendors/chart.js/Chart.min.js') }}"></script>
     <script src="{{ asset('./vendors/chartist/chartist.min.js') }}"></script> --}}

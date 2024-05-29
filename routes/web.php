@@ -30,10 +30,16 @@ Route::get('/kehadiran_izin', function () {return view('kehadiran/kehadiran_izin
 Route::get('/riwayat_kehadiran', function () {return view('kehadiran/riwayat_kehadiran');});
 
 // Gaji
-Route::get('/gaji', function () {return view('gaji/gaji');});
+Route::get('/gaji', function () {return view('gaji/daftar_gaji');});
 
 //Laporan
 Route::get('/laporan_gaji', function () {return view('laporan/laporan_gaji');});
 Route::get('/laporan_karyawan', function () {return view('laporan/laporan_karyawan');});
 // Route::get('/detail_laporan_karyawan', function () {return view('laporan/detail_laporan_karyawan');});
 
+// Pengguna 
+Route::get('/kehadiran', function () {return view('pengguna/kehadiran');}); 
+
+// Login
+Route::get('/login', function () {return view('login/index');});
+Route::get('/registrasi', function () {return view('login/registrasi');});

@@ -1,13 +1,9 @@
 // import './bootstrap';
 
 // import './vendors/js/vendor.bundle.base';
+import './vendors/select2/select2.min';
 import './misc'
+import './off-canvas'
+import './select2'
 
-(function($) {
-    'use strict';
-    $(function() {
-      $('[data-toggle="offcanvas"]').on("click", function() {
-        $('.sidebar-offcanvas').toggleClass('active')
-      });
-    });
-  })(jQuery);
+
