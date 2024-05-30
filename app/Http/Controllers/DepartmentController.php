@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Employee;
-use App\Http\Requests\StoreEmployeeRequest;
-use App\Http\Requests\UpdateEmployeeRequest;
+use App\Models\Department;
+use App\Http\Requests\StoreDepartmentRequest;
+use App\Http\Requests\UpdateDepartmentRequest;
 
-class EmployeeController extends Controller
+class DepartmentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('karyawan.daftar_karyawan');
+        //
     }
 
     /**
@@ -21,21 +21,21 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        return view('karyawan.tambah_karyawan');
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreEmployeeRequest $request)
+    public function store(StoreDepartmentRequest $request)
     {
-        return request()->all();
+        //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Employee $employee)
+    public function show(Department $department)
     {
         //
     }
@@ -43,7 +43,7 @@ class EmployeeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Employee $employee)
+    public function edit(Department $department)
     {
         //
     }
@@ -51,7 +51,7 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateEmployeeRequest $request, Employee $employee)
+    public function update(UpdateDepartmentRequest $request, Department $department)
     {
         //
     }
@@ -59,7 +59,7 @@ class EmployeeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Employee $employee)
+    public function destroy(Department $department)
     {
         //
     }

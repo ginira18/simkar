@@ -2,16 +2,14 @@
 
 @section('title', 'Detail Karyawan')
 @section('content')
-    <div class="d-md-flex row m-2 quick-action-btns" role="group">
-        <div class=" card col-md-5 m-5 p-3 text-center btn-wrapper rounded bg-success">
-            <button type="button" class="btn p-0" onclick="window.location.href='/halaman_kehadiran'">
-                <i class="icon-check mr-2"></i>
-                Hari Libur </button>
+    <div class="d-md-flex row m-2 quick-action-btns">
+        <div class=" card col-md-5 m-5 p-3 text-center rounded bg-success">
+            <a href="pengaturan_hari_libur" type="button" class="btn p-0"><i class="icon-check mr-2"></i> Hari Libur</a>
         </div>
-        <div class=" card col-md-5 m-5 p-3 text-center btn-wrapper rounded bg-primary">
-            <button type="button" class="btn p-0" onclick="window.location.href='/kehadiran_izin'"><i
-                    class="icon-envelope-letter
-            mr-2"></i> Daftar Bagian</button>
+        <div class=" card col-md-5 m-5 p-3 text-center rounded bg-primary">
+            <a href="/daftar_bagian_karyawan" type="button" class="btn p-0"><i class="icon-envelope-letter mr-2"></i> Daftar
+                Bagian</a>
+
         </div>
         {{-- <div class=" card col-md-3 m-5 p-3 text-center btn-wrapper rounded bg-primary">
             <button type="button" class="btn p-0" onclick="window.location.href='/riwayat_kehadiran'"><i

@@ -13,7 +13,7 @@
     <div class="col-12 grid-margin">
         <div class="card m-1 rounded">
             <div class="card-body">
-                <h4 class="card-title mb-5">Tambah Data Karyawan</h4>
+                <h4 class="card-title mb-5">Edit Data Karyawan</h4>
 
                 <form action="/daftar_karyawan" method="POST">
                     @csrf

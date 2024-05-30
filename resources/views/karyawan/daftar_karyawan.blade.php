@@ -6,7 +6,7 @@
         <div class="card rounded justify-content">
             <div class="page-header">
                 <h4 class="card-title mt-5 ml-4">Daftar Karyawan</h4>
-                <button type="button" class="btn btn-primary mt-5 mr-4" onclick="window.location.href='/tambah_karyawan'">Tambah
+                <button type="button" class="btn btn-primary mt-5 mr-4" onclick="window.location.href='/daftar_karyawan/create'">Tambah
                     Karyawan</button>
             </div>
             <div class="py-3 col-3 flex">
