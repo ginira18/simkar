@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Department;
-use App\Http\Requests\StoreDepartmentRequest;
-use App\Http\Requests\UpdateDepartmentRequest;
-use GuzzleHttp\Psr7\Request;
+use App\Models\Attendance;
+use Illuminate\Http\Request;
 
-class DepartmentController extends Controller
+class AttendanceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,12 +29,12 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         //
-    } 
+    }
 
     /**
      * Display the specified resource.
      */
-    public function show(Department $department)
+    public function show(Attendance $attendance)
     {
         //
     }
@@ -44,7 +42,7 @@ class DepartmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Department $department)
+    public function edit(Attendance $attendance)
     {
         //
     }
@@ -52,7 +50,7 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Department $department)
+    public function update(Request $request, Attendance $attendance)
     {
         //
     }
@@ -60,7 +58,7 @@ class DepartmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Department $department)
+    public function destroy(Attendance $attendance)
     {
         //
     }

@@ -6,8 +6,8 @@
         <div class="card rounded justify-content">
             <div class="page-header">
                 <h4 class="card-title mt-5 ml-4">Daftar Karyawan</h4>
-                <button type="button" class="btn btn-primary mt-5 mr-4" onclick="window.location.href='/daftar_karyawan/create'">Tambah
-                    Karyawan</button>
+                <a class="btn btn-primary mt-5 mr-4" href='{{ route('karyawan.create') }}'>Tambah
+                    Karyawan</a>
             </div>
             <div class="py-3 col-3 flex">
                 <input type="search" class="form-control" name="search" placeholder="Cari sesuatu ...">
@@ -36,8 +36,8 @@
                             <td>Kepala</td>
                             <td><label class="badge badge-danger">Belum terdaftar</label></td>
                             <td>
-                                <button type="button" class="btn btn-primary btn-icon-text" onclick="window.location.href='/detail_karyawan'">
-                            <i class="icon-info btn-icon-prepend"></i> Detail </button>
+                                <a type="button" class="btn btn-primary btn-icon-text" href="{{ route('karyawan.show', $i) }}">
+                            <i class="icon-info btn-icon-prepend"></i> Detail </a>
                             </td>
                         </tr>
                     @endfor

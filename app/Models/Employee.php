@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Salary;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Employee extends Model
 {
@@ -20,12 +21,17 @@ class Employee extends Model
     public function user()
     {
         // return $this->belongsTo(User::class, 'id');
-        return $this->hasOne(User::class, 'id');
+        return $this->hasOne(User::class, 'id' , 'id');
     }
 
     public function department()
     {
         return $this->belongsTo(Department::class);
+    }
+
+    public function salary()
+    {
+        return $this->hasOne(Salary::class);
     }
 
 }

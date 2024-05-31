@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Salaries;
 use App\Http\Requests\StoreSalariesRequest;
 use App\Http\Requests\UpdateSalariesRequest;
+use GuzzleHttp\Psr7\Request;
 
 class SalariesController extends Controller
 {
@@ -27,9 +28,9 @@ class SalariesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSalariesRequest $request)
+    public function store(Request $request)
     {
-        //
+        // 
     }
 
     /**

@@ -71,7 +71,7 @@
                         </a>
                         <div class="collapse" id="karyawan">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link" href="/daftar_karyawan">Daftar Karyawan</a>
+                                <li class="nav-item"> <a class="nav-link" href="{{ route('karyawan.index') }}">Daftar Karyawan</a>
                                 </li>
                                 {{-- <li class="nav-item"> <a class="nav-link" href="/rfid">RFID</a></li> --}}
                                 <li class="nav-item"> <a class="nav-link" href="/pengaturan_menu">Pengaturan</a></li>

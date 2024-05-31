@@ -22,7 +22,7 @@
                             <label class="col-sm-6 col-form-label ">Nama Lengkap</label>
                             <div class="col-sm-9">
                                 <input readonly type="text" class="form-control" id="name" name="name"
-                                    placeholder="Nama Lengkap" />
+                                    placeholder="Nama Lengkap" value="{{$employee->name}}" />
                             </div>
 
                             <label class="col-sm-6 col-form-label ">Tanggal Lahir</label>
