@@ -17,7 +17,6 @@
                     <img src="{{ Vite::asset('resources/images/logo-abyaz.png') }} " alt="logo" class="logo mt-3"
                         style="height: 70px;" />
                 </a>
-
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-center flex-grow-1">
                 <h3 class="mb-0 font-weight-medium d-none d-lg-flex">Sistem Manajemen Karyawan</h3>
@@ -73,8 +72,7 @@
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item"> <a class="nav-link" href="{{ route('karyawan.index') }}">Daftar Karyawan</a>
                                 </li>
-                                {{-- <li class="nav-item"> <a class="nav-link" href="/rfid">RFID</a></li> --}}
-                                <li class="nav-item"> <a class="nav-link" href="/pengaturan_menu">Pengaturan</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{ route('pengaturan-karyawan.index') }}">Pengaturan</a></li>
                             </ul>
                         </div>
                     </li>

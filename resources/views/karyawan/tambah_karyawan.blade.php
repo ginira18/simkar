@@ -18,7 +18,7 @@
                 <form action="{{ route('karyawan.store') }}" method="POST">
                     @csrf
 
-                    @if ($errors->any())
+                    {{-- @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul class="m-0">
                                 @foreach ($errors->all() as $error)
@@ -26,7 +26,7 @@
                                 @endforeach
                             </ul>
                         </div>
-                    @endif
+                    @endif --}}
                     <div class="row">
                         {{-- kiri --}}
                         <div class="col-md-6">
@@ -208,7 +208,7 @@
 
                             <div class="col-sm-9">
                                 <div class="form-group row mb-0">
-                                    <label class="col-sm-9 col-form-label">Jaminan Kesehatan</label>
+                                    <label class="col-sm-9 col-form-label">Asuransi Ketenagakerjaan</label>
                                     <div class="col-sm-4">
                                         <div class="form-check">
                                             <label class="form-check-label">
@@ -236,6 +236,7 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </form>
             </div>
         </div>

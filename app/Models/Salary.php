@@ -9,8 +9,12 @@ class Salary extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'amount' => 'string',
+    ];
+
     public function employee()
     {
-        return $this->belongsTo(Employee::class);
+        return $this->hasOne(Employee::class);
     }
 }

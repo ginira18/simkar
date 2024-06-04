@@ -9,6 +9,11 @@
                 <a class="btn btn-primary mt-5 mr-4" href='{{ route('karyawan.create') }}'>Tambah
                     Karyawan</a>
             </div>
+            @if (session('success'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="py-3 col-3 flex">
                 <input type="search" class="form-control" name="search" placeholder="Cari sesuatu ...">
             </div>
@@ -20,30 +25,34 @@
                         <th class="py-4 font-weight-bold">NIP</th>
                         <th class="py-4 font-weight-bold">Bagian</th>
                         <th class="py-4 font-weight-bold">Jabatan</th>
-                        <th class="py-4 font-weight-bold">Status RFID</th>
                         <th class="py-4 font-weight-bold">Aksi</th>
 
 
                     </tr>
                 </thead>
                 <tbody class="text-center">
-                    @for ($i = 1; $i <= 5; $i++)
+                    @foreach ($employees as $employee)
                         <tr>
-                            <td>{{ $i }}</td>
-                            <td>Gilang Nico Raharjo </td>
-                            <td>1234565432</td>
-                            <td>Marketing</td>
-                            <td>Kepala</td>
-                            <td><label class="badge badge-danger">Belum terdaftar</label></td>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $employee->name }}</td>
+                            <td>{{ $employee->NIP }}</td>
+                            <td>{{ $employee->department->name }}</td>
+                            <td>{{ $employee->position }}</td>
                             <td>
-                                <a type="button" class="btn btn-primary btn-icon-text" href="{{ route('karyawan.show', $i) }}">
-                            <i class="icon-info btn-icon-prepend"></i> Detail </a>
+                                <a type="button" class="btn btn-primary btn-icon-text"
+                                    href="{{route('karyawan.show', $employee->id) }}">
+                                    <i class="icon-info btn-icon-prepend"></i> Detail </a>
                             </td>
                         </tr>
-                    @endfor
+                        @endforeach
 
                 </tbody>
             </table>
         </div>
     </div>
 @endsection
+
+
+{{-- <a type="button" class="btn btn-primary btn-icon-text"
+                                    href="/karyawan/{{$employee->id }}">
+                                    <i class="icon-info btn-icon-prepend"></i> Detail </a> --}}

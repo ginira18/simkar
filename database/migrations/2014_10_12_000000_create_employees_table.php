@@ -27,6 +27,8 @@ return new class extends Migration
             $table->string('position');
             $table->enum('employee_type', ['monthly', 'daily']);
             $table->enum('bpjs', ['bpjs', 'no_bpjs']);
+            $table->enum('status', ['active', 'inactive']);
+            $table->string('rfid_number');
             $table->unsignedBigInteger('department_id');
             $table->unsignedBigInteger('salary_id');
             $table->timestamps();

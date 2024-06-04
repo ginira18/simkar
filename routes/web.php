@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\EmployeeSettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,7 @@ Route::get('/daftar_bagian_karyawan', function () {return view('karyawan/pengatu
 
 
 Route::resource('karyawan', EmployeeController::class);
+Route::resource('pengaturan-karyawan', EmployeeSettingController::class);
 
 
 // Presensi
