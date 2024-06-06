@@ -127,7 +127,7 @@
                                     </div>
                                 </div>
                             </div>
-
+ 
                             <label class="col-sm-6 col-form-label">Tunjangan Tetap</label>
                             <div class="col-sm-9">
                                 <div class="form-group m-0">

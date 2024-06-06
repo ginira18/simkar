@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class EmployeeSettingController extends Controller
@@ -11,8 +13,15 @@ class EmployeeSettingController extends Controller
      */
     public function index()
     {
-        return view('karyawan.pengaturan.pengaturan_menu');
-        
+        $activeDepartments = Department::where('is_active', true)->get();
+        $inactiveDepartments = Department::where('is_active', false)->get();
+        $inactiveEmployees = Employee::where('is_active', false)->get();
+
+        return view('karyawan.pengaturan.pengaturan_menu', [
+            'activeDepartments' => $activeDepartments,
+            'inactiveDepartments' => $inactiveDepartments,
+            'inactiveEmployees' => $inactiveEmployees,
+        ]);
     }
 
     /**
@@ -20,7 +29,6 @@ class EmployeeSettingController extends Controller
      */
     public function create()
     {
-        
     }
 
     /**
@@ -28,15 +36,25 @@ class EmployeeSettingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // return request()->all();
+        $validated = $request->validate([
+            'name' => 'required|unique:departments,name',
+        ]);
+        Department::insert($validated);
+
+        return redirect('pengaturan-karyawan');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $employee = Employee::findOrFail($id);
+        // dd($employee);
+        return view('karyawan.pengaturan.pengaturan_detail_karyawan', [
+            "employee" => $employee
+        ]);
     }
 
     /**

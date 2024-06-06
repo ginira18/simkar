@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
-use App\Http\Requests\StoreDepartmentRequest;
-use App\Http\Requests\UpdateDepartmentRequest;
 use GuzzleHttp\Psr7\Request;
 
 class DepartmentController extends Controller

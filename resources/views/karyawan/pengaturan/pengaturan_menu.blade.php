@@ -1,24 +1,139 @@
 @extends ('layout.template')
 
-@section('title', 'Detail Karyawan')
+@section('title', 'Pengaturan Karyawan')
 @section('content')
-    <div class="d-md-flex row m-2 quick-action-btns">
-        {{-- <div class=" card col-md-5 m-5 p-3 text-center rounded bg-success">
-            <a href="pengaturan_hari_libur" type="button" class="btn p-0"><i class="icon-check mr-2"></i> Hari Libur</a>
-        </div> --}}
-        <div class=" card col-md-5 m-5 p-3 text-center rounded bg-primary">
-            <a href="/daftar_bagian_karyawan" type="button" class="btn p-0"><i class="icon-envelope-letter mr-2"></i> Daftar
-                Bagian</a>
 
+    <style>
+        .card-body {
+            max-height: 600px;
+            min-height: 500px;
+            overflow-y: auto;
+        }
+
+        .fix-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+        }
+    </style>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card rounded">
+                    <div class="card-body">
+                        <h4 class="card-title">Daftar Bagian Aktif</h4>
+                        <div class="row justify-content-end">
+                            <div class="col-sm-6">
+                                <button type="button" class="btn btn-primary mt-2" data-toggle="modal"
+                                    data-target="#modal_tambah_bagian">Tambah Bagian</button>
+                            </div>
+                        </div>
+                        <table class="table table-border table-hover">
+                            <thead>
+                                <tr class="text-center">
+                                    <th class="py-4  font-weight-bold">No</th>
+                                    <th class="py-4 font-weight-bold">Nama Bagian</th>
+                                    <th class="py-4 font-weight-bold">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                @foreach ($activeDepartments as $department)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $department->name }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-dark dropdown-toggle"
+                                                    data-toggle="dropdown">Aksi</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item">Non-Aktif</a>
+                                                    <a class="dropdown-item">Hapus</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card rounded">
+                    <div class="card-body">
+                        <h4 class="card-title">Daftar Bagian Non-Aktif</h4>
+                        <div class="row justify-content-end">
+                            <div class="col-sm-6 mt-5">
+                                {{-- <button type="button" class="btn btn-primary mt-2"
+                                    onclick="window.location.href='/tambah_karyawan'">Tambah
+                                    Karyawan</button> --}}
+                            </div>
+                        </div>
+                        <table class="table table-border table-hover mt-1">
+                            <thead>
+                                <tr class="text-center">
+                                    <th class="py-4  font-weight-bold">No</th>
+                                    <th class="py-4 font-weight-bold">Nama Bagian</th>
+                                    <th class="py-4 font-weight-bold">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                @foreach ($inactiveDepartments as $department)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $department->name }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-dark dropdown-toggle"
+                                                    data-toggle="dropdown">Aksi</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item">Non-Aktif</a>
+                                                    <a class="dropdown-item">Hapus</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-        {{-- <div class=" card col-md-3 m-5 p-3 text-center btn-wrapper rounded bg-primary">
-            <button type="button" class="btn p-0" onclick="window.location.href='/riwayat_kehadiran'"><i
-                    class="icon-notebook mr-2"></i> Riwayat Karyawan</button>
-        </div> --}}
     </div>
 
-    <div class="card mt-3 rounded">
-        <h4 class="card-title mt-4 ml-3">Daftar Karyawan Non-Aktif</h4>
+    {{-- Modal Tambah Bagian --}}
+    <div class="modal fade" id="modal_tambah_bagian" tabindex="-1" role="dialog" aria-labelledby="modal_tambah_bagian"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">Tambah Bagian</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-4">
+                    <form action="{{ route('pengaturan-karyawan.store') }}" method="POST">
+                        @csrf
+                        <div class="mb-2">
+                            <label>
+                                <h5>Nama Bagian</h5>
+                            </label>
+                            <input type="text" class="form-control" id="name" name="name">
+                        </div>
+                        <div>
+                            <button type="subnit" class="btn btn-primary mt-2">Tambah Bagian</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-3 rounded mb-5">
+        <h4 class="card-title mt-4 ml-3">Daftar Karyawan Non-Aktif</h4> 
         <table class="table table-border table-hover">
             <thead>
                 <tr class="text-center">
@@ -27,27 +142,37 @@
                     <th class="py-4 font-weight-bold">NIP</th>
                     <th class="py-4 font-weight-bold">Bagian</th>
                     <th class="py-4 font-weight-bold">Jabatan</th>
-                    <th class="py-4 font-weight-bold">Status</th>
                     <th class="py-4 font-weight-bold">Aksi</th>
+
+
                 </tr>
             </thead>
             <tbody class="text-center">
-                @for ($i = 1; $i <= 5; $i++)
+                @foreach ($inactiveEmployees as $employee)
                     <tr>
-                        <td>{{ $i }}</td>
-                        <td>Gilang Nico Raharjo </td>
-                        <td>1234565432</td>
-                        <td>Marketing</td>
-                        <td>Kepala</td>
-                        <td><label class="badge badge-danger">Non-Aktif</label></td>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $employee->name }}</td>
+                        <td>{{ $employee->NIP }}</td>
+                        <td>{{ $employee->department->name }}</td>
+                        <td>{{ $employee->position }}</td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-icon-text"
-                                onclick="window.location.href='/pengaturan_detail_karyawan'">
-                                <i class="icon-info btn-icon-prepend"></i> Detail </button>
+                            <a type="button" class="btn btn-primary btn-icon-text"
+                                href="{{ route('pengaturan-karyawan.show', $employee->id) }}">
+                                <i class="icon-info btn-icon-prepend"></i> Detail </a>
                         </td>
                     </tr>
-                @endfor
+                @endforeach
+
             </tbody>
         </table>
     </div>
 @endsection
+
+
+
+{{-- <div class="d-md-flex row m-2 quick-action-btns">
+    <div class=" card col-md-5 m-5 p-3 text-center rounded bg-primary">
+        <a href="/daftar_bagian_karyawan" type="button" class="btn p-0"><i class="icon-envelope-letter mr-2"></i> Daftar
+            Bagian</a>
+    </div>
+</div> --}}

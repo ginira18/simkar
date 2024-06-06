@@ -19,7 +19,7 @@
             <div class="card rounded mb-5 ml-2 p-4 col-md">
                 <label class="card-title">Tempelkan Kartu Pada Pembaca RFID</label>
                 {{-- <input type="text" class="form-control col-md-5"> --}}
-                <input type="text" class="form-control col-md-5" style="border: none;">
+                <input type="text" class="form-control col-md-5" style="border: none;" autofocus>
             </div>
         </div>
     

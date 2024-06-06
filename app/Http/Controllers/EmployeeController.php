@@ -16,9 +16,15 @@ class EmployeeController extends Controller
      */
     public function index()
     {
+        $activeEmployees = Employee::where('is_active', true)->get();
+        $inactiveEmployees = Employee::where('is_active', false)->get();
+
         return view(
             'karyawan.daftar_karyawan',
-            ['employees' => Employee::all()]
+            [
+                'activeEmployees' => $activeEmployees,
+                'inactiveEmployees' => $inactiveEmployees,
+            ]
         );
     }
 

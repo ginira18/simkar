@@ -45,7 +45,7 @@
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="name" name="name"
                                     placeholder="Nama Lengkap" />
-                                @if ($errors->has('nip'))
+                                @if ($errors->has('name'))
                                     <label class="text-danger">
                                         {{ $errors->first('name') }}
                                     </label>

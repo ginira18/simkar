@@ -31,7 +31,7 @@
                     </tr>
                 </thead>
                 <tbody class="text-center">
-                    @foreach ($employees as $employee)
+                    @foreach ($activeEmployees as $employee)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $employee->name }}</td>

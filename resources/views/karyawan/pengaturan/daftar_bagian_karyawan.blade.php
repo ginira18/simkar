@@ -80,6 +80,7 @@
                                                     <a class="dropdown-item">Aktif</a>
                                                     <a class="dropdown-item">Hapus</a>
                                                 </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endfor
@@ -111,7 +112,7 @@
                             <input type="text" class="form-control">
                         </div>
                         <div>
-                            <button type="button" class="btn btn-primary mt-2">Tambah Bagian</button>
+                            <button type="subnit" class="btn btn-primary mt-2">Tambah Bagian</button>
                         </div>
                     </form>
                 </div>
