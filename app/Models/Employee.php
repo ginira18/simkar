@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Salary;
+use App\Models\Department;
+use App\Models\Attendance;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -33,6 +35,9 @@ class Employee extends Model
     {
         return $this->belongsTo(Salary::class);
     }
-    
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
 
 }

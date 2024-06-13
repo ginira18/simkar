@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Salaries;
-use App\Http\Requests\StoreSalariesRequest;
-use App\Http\Requests\UpdateSalariesRequest;
-use GuzzleHttp\Psr7\Request;
+use Illuminate\Http\Request;
 
-class SalariesController extends Controller
+class DashboardController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return view('dashboard');
     }
 
     /**
@@ -30,13 +27,13 @@ class SalariesController extends Controller
      */
     public function store(Request $request)
     {
-        // 
+        //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Salaries $salaries)
+    public function show(string $id)
     {
         //
     }
@@ -44,7 +41,7 @@ class SalariesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Salaries $salaries)
+    public function edit(string $id)
     {
         //
     }
@@ -52,7 +49,7 @@ class SalariesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSalariesRequest $request, Salaries $salaries)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -60,7 +57,7 @@ class SalariesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Salaries $salaries)
+    public function destroy(string $id)
     {
         //
     }

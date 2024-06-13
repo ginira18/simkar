@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Department;
-use GuzzleHttp\Psr7\Request;
+use App\Models\Salary;
+use Illuminate\Http\Request;
 
-class DepartmentController extends Controller
+class SalaryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -29,12 +29,12 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         //
-    } 
+    }
 
     /**
      * Display the specified resource.
      */
-    public function show(Department $department)
+    public function show(Salary $salary)
     {
         //
     }
@@ -42,7 +42,7 @@ class DepartmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Department $department)
+    public function edit(Salary $salary)
     {
         //
     }
@@ -50,7 +50,7 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Department $department)
+    public function update(Request $request, Salary $salary)
     {
         //
     }
@@ -58,7 +58,7 @@ class DepartmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Department $department)
+    public function destroy(Salary $salary)
     {
         //
     }

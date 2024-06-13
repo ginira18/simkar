@@ -6,7 +6,7 @@
     <style>
         .card-body {
             max-height: 600px;
-            min-height: 500px;
+            min-height: 600px;
             overflow-y: auto;
         }
 
@@ -25,11 +25,11 @@
                         <h4 class="card-title">Daftar Bagian Aktif</h4>
                         <div class="row justify-content-end">
                             <div class="col-sm-6">
-                                <button type="button" class="btn btn-primary mt-2" data-toggle="modal"
+                                <button type="button" class="btn btn-primary btn-md mt-2" data-toggle="modal"
                                     data-target="#modal_tambah_bagian">Tambah Bagian</button>
                             </div>
                         </div>
-                        <table class="table table-border table-hover">
+                        <table class="table table-hover">
                             <thead>
                                 <tr class="text-center">
                                     <th class="py-4  font-weight-bold">No</th>
@@ -43,14 +43,17 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $department->name }}</td>
                                         <td>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-dark dropdown-toggle"
-                                                    data-toggle="dropdown">Aksi</button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item">Non-Aktif</a>
-                                                    <a class="dropdown-item">Hapus</a>
-                                                </div>
-                                            </div>
+                                            <form action="{{ route('pengaturan-karyawan.deactivate', $department->id) }}"
+                                                method="POST" style="display:inline;">
+                                                @csrf
+                                                <button type="submit" class="btn btn-dark btn-sm">Non-Aktif</button>
+                                            </form>
+                                            {{-- <form class="d-inline" action="{{ route('pengaturan-karyawan.destroy', $department->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                            </form> --}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -70,7 +73,7 @@
                                     Karyawan</button> --}}
                             </div>
                         </div>
-                        <table class="table table-border table-hover mt-1">
+                        <table class="table table-hover mt-1">
                             <thead>
                                 <tr class="text-center">
                                     <th class="py-4  font-weight-bold">No</th>
@@ -84,14 +87,17 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $department->name }}</td>
                                         <td>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-dark dropdown-toggle"
-                                                    data-toggle="dropdown">Aksi</button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item">Non-Aktif</a>
-                                                    <a class="dropdown-item">Hapus</a>
-                                                </div>
-                                            </div>
+                                            <form action="{{ route('pengaturan-karyawan.activate', $department->id) }}"
+                                                method="POST" style="display:inline;">
+                                                @csrf
+                                                <button type="submit" class="btn btn-dark btn-sm">Aktif</button>
+                                            </form>
+                                            <form class="d-inline" action="{{ route('pengaturan-karyawan.destroy', $department->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -133,7 +139,7 @@
     </div>
 
     <div class="card mt-3 rounded mb-5">
-        <h4 class="card-title mt-4 ml-3">Daftar Karyawan Non-Aktif</h4> 
+        <h4 class="card-title mt-4 ml-3">Daftar Karyawan Non-Aktif</h4>
         <table class="table table-border table-hover">
             <thead>
                 <tr class="text-center">

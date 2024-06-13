@@ -17,13 +17,11 @@ class EmployeeController extends Controller
     public function index()
     {
         $activeEmployees = Employee::where('is_active', true)->get();
-        $inactiveEmployees = Employee::where('is_active', false)->get();
 
         return view(
             'karyawan.daftar_karyawan',
             [
                 'activeEmployees' => $activeEmployees,
-                'inactiveEmployees' => $inactiveEmployees,
             ]
         );
     }
@@ -33,8 +31,9 @@ class EmployeeController extends Controller
      */
     public function create()
     {
+        $activeDepartments = Department::where('is_active', true)->get();
         return view('karyawan.tambah_karyawan', [
-            'departments' => Department::all(),
+            'departments' => $activeDepartments,
         ]);
     }
 
@@ -108,15 +107,6 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      */
-    // public function show(Employee $employee)
-    // {
-    //     // // dd($id);
-    //     // return $employee;
-    //     // // return view('karyawan.detail_karyawan', [
-    //     // //     "employee" => $employee
-    //     // // ]);
-
-    // }
     public function show($id)
     {
         $employee = Employee::findOrFail($id);
@@ -134,10 +124,12 @@ class EmployeeController extends Controller
     public function edit($id)
     {
         $employee = Employee::findOrFail($id);
-        // dd($employee);
+
+        $activeDepartments = Department::where('is_active', true)->get();
+
         return view('karyawan.edit_karyawan', [
             'employee' => $employee,
-            'departments' => Department::all(),
+            'departments' => $activeDepartments,
         ]);
     }
     // {
@@ -154,7 +146,6 @@ class EmployeeController extends Controller
     public function update(Request $request, $id)
     {
         $employee = Employee::findOrFail($id);
-
         $validated = $request->validate([
             'nip' => 'required|numeric|unique:employees,NIP,' . $employee->id,
             'name' => 'required',
@@ -214,18 +205,33 @@ class EmployeeController extends Controller
         return redirect('/karyawan')->with('success', 'Data Karyawan Berhasil Diperbarui');
     }
 
+    public function deactivate($id)
+    {
+        $employee = Employee::findOrFail($id);
+        $employee->update(['is_active' => false]);
+
+        return redirect('/karyawan')->with('success', 'Karyawan berhasil dinonaktifkan.');
+    }
+    public function activate($id)
+    {
+        $employee = Employee::findOrFail($id);
+        if ($employee->department->is_active) {
+            $employee->update(['is_active' => true]);
+            return redirect('/karyawan')->with('success', 'Karyawan berhasil diaktifkan.');
+        } else {
+            return redirect()->back()->with('error', 'Tidak dapat mengaktifkan karyawan karena bagian karyawan terkait tidak aktif.');
+        }
+    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        $employee = Employee::find($id);
-
-        if (!$employee) {
-            return response()->json([
-                'message' => "Data pegawai tidak ditemukan !"
-            ], 404);
-        }
+        // Employee::destroy($employee->id);
+        // return redirect('/karyawan')->with('success', 'Data Karyawan Berhasil Dihapus');
+        $employee = Employee::findOrFail($id);
+        $employee->delete();
+        return redirect('/karyawan')->with('success', 'Data Karyawan Berhasil Diperbarui');
     }
 }

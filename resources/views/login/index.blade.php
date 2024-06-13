@@ -11,16 +11,29 @@
 <div class="content-wrapper d-flex justify-content-center" style="height: 100vh; width: 100vw;">
     <div class="card rounded mb-5 mr-2 p-4 col-md-4">
         <h2 class="text-center mb-5">Login</h2>
-        <form class="mb-3 mt-5" action="login">
-            <label for="username">Email</label>
-            <input type="email" name="username" id="username" class="form-control mb-3" placeholder="Masukkan email" required>
+        <div>
+            @if (session('status_error'))
+                <div class="alert alert-danger">
+                    {{ session('status_error') }}
+                </div>
+            @endif
+            @if (session('status_success'))
+                <div class="alert alert-success">
+                    {{ session('status_success') }}
+                </div>
+            @endif
+        </div>
+        <form class="mb-3 mt-5" action="{{ route('login') }}" method="POST">
+            @csrf
+            <label for="username">Username</label>
+            <input type="username" name="username" id="username" class="form-control mb-3" placeholder="Masukkan username" required>
             <label for="password">Password</label>
             <input type="password" name="password" id="password" class="form-control mb-5" placeholder="Masukkan password"
                 required>
             <button type="submit" class="btn btn-primary btn-block">Masuk</button>
         </form>
         <div class="d-flex justify-content-center">
-            <small>Tidak terdaftar? <a href="/registrasi">Daftar sekarang!</a></small>
+            <small>Tidak terdaftar? <a href={{route('register')}}>Daftar sekarang!</a></small>
         </div>
     </div>
 

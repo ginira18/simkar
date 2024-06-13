@@ -36,7 +36,6 @@ class EmployeeSettingController extends Controller
      */
     public function store(Request $request)
     {
-        // return request()->all();
         $validated = $request->validate([
             'name' => 'required|unique:departments,name',
         ]);
@@ -51,7 +50,6 @@ class EmployeeSettingController extends Controller
     public function show($id)
     {
         $employee = Employee::findOrFail($id);
-        // dd($employee);
         return view('karyawan.pengaturan.pengaturan_detail_karyawan', [
             "employee" => $employee
         ]);
@@ -62,7 +60,7 @@ class EmployeeSettingController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        
     }
 
     /**
@@ -73,11 +71,33 @@ class EmployeeSettingController extends Controller
         //
     }
 
+    public function deactivate($id)
+    {
+        $department = Department::findOrFail($id);
+        $department->employees()->update(['is_active' => false]);
+        $department->is_active = false;
+        $department->save();
+
+        return redirect()->back();
+    }
+    public function activate($id)
+    {
+        $department = Department::findOrFail($id);
+        $department->employees()->update(['is_active' => true]);
+        $department->is_active = true;
+        $department->save();
+
+        return redirect()->back();
+    }
+
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $department = Department::findOrFail($id);
+        $department->delete();
+
+        return redirect('/pengaturan-karyawan')->with('success', 'Data Karyawan Berhasil Dihapus');
     }
 }

@@ -26,7 +26,8 @@
                             aria-expanded="false">
                             <img class="img-xs rounded-circle ml-2"
                                 src="{{ Vite::asset('resources/images/faces/face8.jpg') }}" alt="Profile image">
-                            <span class="font-weight-normal"> Henry Klein </span></a>
+                            <span class="font-weight-normal"> {{Auth::user()->employee->name
+                                }} </span></a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                             <div class="dropdown-header text-center">
                                 <img class="img-md rounded-circle"
@@ -36,8 +37,12 @@
                             </div>
                             <a class="dropdown-item"><i class="dropdown-item-icon icon-user text-primary"></i> My
                                 Profile </a>
-                            <a class="dropdown-item"><i class="dropdown-item-icon icon-power text-primary"></i>Sign
-                                Out</a>
+                            <form action="{{ route('logout')}}" method="POST">
+                                @csrf
+                                <button type="submit" class="dropdown-item">
+                                    <i class="dropdown-item-icon icon-power text-primary"></i>Logout
+                                </button>
+                            </form>
                         </div>
                     </li>
                 </ul>
@@ -52,12 +57,11 @@
             <!-- partial:partials/_sidebar.html -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
-
                     <li class="nav-item nav-category">
                         <span class="nav-link">@yield('title', 'Simkar')</span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/">
+                        <a class="nav-link" href="{{ route('dashboard.index')}}">
                             <span class="menu-title">Dashboard</span>
                             <i class="icon-screen-desktop menu-icon"></i>
                         </a>
@@ -70,14 +74,16 @@
                         </a>
                         <div class="collapse" id="karyawan">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link" href="{{ route('karyawan.index') }}">Daftar Karyawan</a>
+                                <li class="nav-item"> <a class="nav-link" href="{{ route('karyawan.index') }}">Daftar
+                                        Karyawan</a>
                                 </li>
-                                <li class="nav-item"> <a class="nav-link" href="{{ route('pengaturan-karyawan.index') }}">Pengaturan</a></li>
+                                <li class="nav-item"> <a class="nav-link"
+                                        href="{{ route('pengaturan-karyawan.index') }}">Pengaturan</a></li>
                             </ul>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/menu_kehadiran">
+                        <a class="nav-link" href="{{ route('dashboard-kehadiran.index') }}">
                             <span class="menu-title">kehadiran</span>
                             <i class="icon-globe menu-icon"></i>
                         </a>
@@ -105,8 +111,42 @@
                             <i class="icon-globe menu-icon"></i>
                         </a>
                     </li>
-
                 </ul>
+
+                @can('pegawai')
+                <ul class="nav">
+                    <label>Pengguna</label>
+                    <li class="nav-item nav-category">
+                        <span class="nav-link">@yield('title', 'Simkar')</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <span class="menu-title">Dashboard</span>
+                            <i class="icon-screen-desktop menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/pengguna/kehadiran">
+                            <span class="menu-title"> Catatan Kehadiran</span>
+                            <i class="icon-screen-desktop menu-icon"></i>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <span class="menu-title">Laporan Harian</span>
+                            <i class="icon-globe menu-icon"></i>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/gaji">
+                            <span class="menu-title">Gaji</span>
+                            <i class="icon-globe menu-icon"></i>
+                        </a>
+                    </li>
+                </ul>
+                @endcan
             </nav>
             <div class="main-panel">
                 <div class="content-wrapper">

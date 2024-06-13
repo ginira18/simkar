@@ -9,9 +9,9 @@ class Salary extends Model
 {
     use HasFactory;
 
-    protected $casts = [
-        'amount' => 'string',
-    ];
+    // protected $casts = [
+    //     'amount' => 'string',
+    // ];
 
     public function employee()
     {
