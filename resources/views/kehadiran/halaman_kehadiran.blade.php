@@ -54,7 +54,9 @@
                                         <td>{{ $attendance->employee->name }}</td>
                                         <td>{{ $attendance->employee->NIP }}</td>
                                         <td>{{ $attendance->employee->department->name }}</td>
-                                        <td><label class="badge badge-danger">Terlambat</label></td>
+                                        <td>
+                                                <label class="badge badge-danger">Terlambat</label>
+                                        </td>
                                         <td>{{ $attendance->check_in }}</td>
                                         <td>{{ $attendance->check_out }}</td>
                                     </tr>

@@ -47,7 +47,7 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 Route::post('/register', [RegisterController::class, 'register']);
 
 // Login
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
@@ -71,16 +71,21 @@ Route::get('/laporan_karyawan', function () {
 });
 // Route::get('/detail_laporan_karyawan', function () {return view('laporan/detail_laporan_karyawan');});
 
-// Pengguna 
-Route::get('/kehadiran', function () {
-    return view('pengguna/kehadiran');
+
+Route::middleware('employee')->group(function () {
+    
+    // Route::get('/kehadiran', function () {
+    //     return view('pengguna/kehadiran');
+    // });
+    // Route::get('dashboard', [DashboardController::class, 'index_karyawan']);
+    Route::get('/pengguna/home', function () {
+        return view('pengguna/home');
+    });
+    Route::get('/pengguna/kehadiran', function () {
+        return view('pengguna/kehadiran');
+    });  
 });
-Route::get('/pengguna/home', function () {
-    return view('pengguna/home');
-});
-Route::get('/pengguna/kehadiran', function () {
-    return view('pengguna/kehadiran');
-});  
+
 
 // Login
 // Route::get('/login', function () {return view('login/index');});

@@ -17,8 +17,16 @@ class LoginController extends Controller
         $credentials = $request->only('username', 'password');
 
         if (Auth::attempt($credentials)) {
-            // Jika berhasil login dengan email, redirect ke halaman yang sesuai
-            return redirect()->intended('karyawan');
+            $user = Auth::user();
+
+            if ($user->roles == 'admin') {
+                return redirect()->intended('dashboard');
+            } elseif ($user->roles == 'pegawai') {
+                return redirect()->intended('');
+            } else {
+                Auth::logout();
+                return redirect()->back()->with('status_error', 'Anda tidak memiliki akses')->withInput();
+            }
         }
 
         return redirect()->back()->with('status_error', 'Email atau password salah')->withInput();

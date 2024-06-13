@@ -120,7 +120,7 @@
                         <span class="nav-link">@yield('title', 'Simkar')</span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/">
+                        <a class="nav-link" href="{{ route ('dashboard_karyawan')}}">
                             <span class="menu-title">Dashboard</span>
                             <i class="icon-screen-desktop menu-icon"></i>
                         </a>
