@@ -30,7 +30,6 @@ class Employee extends Model
     {
         return $this->belongsTo(Department::class);
     }
-
     public function salary()
     {
         return $this->belongsTo(Salary::class);
@@ -39,5 +38,8 @@ class Employee extends Model
     {
         return $this->hasMany(Attendance::class);
     }
-
+    public function permissions()
+    {
+        return $this->hasMany(Permission::class);
+    }
 }

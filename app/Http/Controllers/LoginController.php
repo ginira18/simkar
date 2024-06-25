@@ -22,7 +22,7 @@ class LoginController extends Controller
             if ($user->roles == 'admin') {
                 return redirect()->intended('dashboard');
             } elseif ($user->roles == 'pegawai') {
-                return redirect()->intended('');
+                return redirect()->intended('dashboard-karyawan');
             } else {
                 Auth::logout();
                 return redirect()->back()->with('status_error', 'Anda tidak memiliki akses')->withInput();

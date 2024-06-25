@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use \App\Models\Department;
 use App\Models\Employee;
 use App\Models\Salary;
@@ -15,8 +16,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Department::create([
-            'name' => 'Packing'
+        $this->call([
+            DepartmentSeeder::class,
+            SalarySeeder::class,
+            EmployeeSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }

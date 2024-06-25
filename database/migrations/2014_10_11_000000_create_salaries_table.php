@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('departments', function (Blueprint $table) {
+        Schema::create('salaries', function (Blueprint $table) {
             $table->id();
+            $table->integer('base_salary');
+            $table->integer('fix_allowance');
+            $table->enum('status', ['diberikan', 'belum_diberikan'])->default('belum_diberikan');
             $table->timestamps();
-            $table->string('name');
-            $table->boolean('is_active')->default(true);
         });
-        
     }
 
     /**
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('departments');
+        Schema::dropIfExists('salaries');
     }
 };

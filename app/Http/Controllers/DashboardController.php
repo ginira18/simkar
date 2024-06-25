@@ -11,13 +11,13 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+        return view('admin.dashboard');
     }
 
-    // public function index_karyawan()
-    // {
-    //     return view('dashboard');
-    // }
+    public function index_karyawan()
+    {
+        return view('pegawai.dashboard');
+    }
 
     /**
      * Show the form for creating a new resource.

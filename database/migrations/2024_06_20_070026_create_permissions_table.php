@@ -11,20 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendances', function (Blueprint $table) {
+        Schema::create('permissions', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
-            $table->time('check_in')->nullable();
-            $table->time('check_out')->nullable();
-            $table->enum('status', ['hadir', 'izin', 'alpha'])->default('alpha');
-            $table->enum('keterangan', ['tepat_waktu', 'terlambat'])->nullable();
             $table->unsignedBigInteger('employee_id');
+            $table->date('start_date');
+            $table->date('end_date')->nullable();
+            $table->text('reason');
+            $table->string('evidence')->nullable();
+            $table->enum('status', ['Pending', 'Approved', 'Rejected'])->default('Pending');
             $table->timestamps();
-        });
 
-        Schema::table('attendances', function (Blueprint $table) {
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
         });
+
     }
 
     /**
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendances');
+        Schema::dropIfExists('permissions');
     }
 };

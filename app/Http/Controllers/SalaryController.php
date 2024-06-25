@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Salary;
 use Illuminate\Http\Request;
+use App\Models\Salary;
+use App\Models\Employee;
 
 class SalaryController extends Controller
 {
@@ -12,7 +13,9 @@ class SalaryController extends Controller
      */
     public function index()
     {
-        //
+        $employees = Employee::with(['department', 'salary'])->get();
+
+        return view('admin.gaji.daftar_gaji')->with('employees', $employees);
     }
 
     /**

@@ -19,7 +19,7 @@ class EmployeeController extends Controller
         $activeEmployees = Employee::where('is_active', true)->get();
 
         return view(
-            'karyawan.daftar_karyawan',
+            'admin.karyawan.daftar_karyawan',
             [
                 'activeEmployees' => $activeEmployees,
             ]
@@ -32,7 +32,7 @@ class EmployeeController extends Controller
     public function create()
     {
         $activeDepartments = Department::where('is_active', true)->get();
-        return view('karyawan.tambah_karyawan', [
+        return view('admin.karyawan.tambah_karyawan', [
             'departments' => $activeDepartments,
         ]);
     }
@@ -101,7 +101,7 @@ class EmployeeController extends Controller
             "rfid_number" => $request->rfid_number,
         ]);
 
-        return redirect('/karyawan')->with('success', 'Data Karyawan Berhasil Ditambahkan');
+        return redirect('karyawan')->with('success', 'Data Karyawan Berhasil Ditambahkan');
     }
 
     /**
@@ -112,7 +112,7 @@ class EmployeeController extends Controller
         $employee = Employee::findOrFail($id);
         // dd($employee);
 
-        return view('karyawan.detail_karyawan', [
+        return view('admin.karyawan.detail_karyawan', [
             "employee" => $employee
         ]);
     }
@@ -127,7 +127,7 @@ class EmployeeController extends Controller
 
         $activeDepartments = Department::where('is_active', true)->get();
 
-        return view('karyawan.edit_karyawan', [
+        return view('admin.karyawan.edit_karyawan', [
             'employee' => $employee,
             'departments' => $activeDepartments,
         ]);
@@ -202,7 +202,7 @@ class EmployeeController extends Controller
             "rfid_number" => $validated["rfid_number"],
         ]);
 
-        return redirect('/karyawan')->with('success', 'Data Karyawan Berhasil Diperbarui');
+        return redirect('karyawan')->with('success', 'Data Karyawan Berhasil Diperbarui');
     }
 
     public function deactivate($id)
@@ -210,14 +210,14 @@ class EmployeeController extends Controller
         $employee = Employee::findOrFail($id);
         $employee->update(['is_active' => false]);
 
-        return redirect('/karyawan')->with('success', 'Karyawan berhasil dinonaktifkan.');
+        return redirect('karyawan')->with('success', 'Karyawan berhasil dinonaktifkan.');
     }
     public function activate($id)
     {
         $employee = Employee::findOrFail($id);
         if ($employee->department->is_active) {
             $employee->update(['is_active' => true]);
-            return redirect('/karyawan')->with('success', 'Karyawan berhasil diaktifkan.');
+            return redirect('karyawan')->with('success', 'Karyawan berhasil diaktifkan.');
         } else {
             return redirect()->back()->with('error', 'Tidak dapat mengaktifkan karyawan karena bagian karyawan terkait tidak aktif.');
         }
@@ -232,6 +232,6 @@ class EmployeeController extends Controller
         // return redirect('/karyawan')->with('success', 'Data Karyawan Berhasil Dihapus');
         $employee = Employee::findOrFail($id);
         $employee->delete();
-        return redirect('/karyawan')->with('success', 'Data Karyawan Berhasil Diperbarui');
+        return redirect('karyawan')->with('success', 'Data Karyawan Berhasil Diperbarui');
     }
 }

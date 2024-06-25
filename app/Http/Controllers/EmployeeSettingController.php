@@ -17,7 +17,7 @@ class EmployeeSettingController extends Controller
         $inactiveDepartments = Department::where('is_active', false)->get();
         $inactiveEmployees = Employee::where('is_active', false)->get();
 
-        return view('karyawan.pengaturan.pengaturan_menu', [
+        return view('admin.karyawan.pengaturan.pengaturan_menu', [
             'activeDepartments' => $activeDepartments,
             'inactiveDepartments' => $inactiveDepartments,
             'inactiveEmployees' => $inactiveEmployees,
@@ -50,7 +50,7 @@ class EmployeeSettingController extends Controller
     public function show($id)
     {
         $employee = Employee::findOrFail($id);
-        return view('karyawan.pengaturan.pengaturan_detail_karyawan', [
+        return view('admin.karyawan.pengaturan.pengaturan_detail_karyawan', [
             "employee" => $employee
         ]);
     }
@@ -95,9 +95,17 @@ class EmployeeSettingController extends Controller
      */
     public function destroy($id)
     {
+        // Temukan departemen berdasarkan ID
         $department = Department::findOrFail($id);
+        
+        $employees = Employee::where('department_id', $id)->exists();
+
+        if ($employees) {
+            return redirect('pengaturan-karyawan')->with('status_error', 'Tidak dapat menghapus bagian, karena masih ada karyawan terkait.');
+        }
+
         $department->delete();
 
-        return redirect('/pengaturan-karyawan')->with('success', 'Data Karyawan Berhasil Dihapus');
+        return redirect('pengaturan-karyawan')->with('status_success', 'Bagian berhasil dihapus.');
     }
 }
