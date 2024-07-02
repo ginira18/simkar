@@ -108,7 +108,7 @@
                                     <a class="nav-link" href="{{ route ('dashboard-gaji.index')}}">Gaji</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/gaji">Laporan Gaji</a>
+                                    <a class="nav-link" href="">Riwayat Gaji</a>
                                 </li>
                             </ul>
                         </div>

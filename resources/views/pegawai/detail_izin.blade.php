@@ -56,7 +56,7 @@
                     <a href="{{ route('izin-karyawan') }}" class="btn btn-primary">Kembali</a>
                 </div>
                 <div class="col-sm-4">
-                    <a href="{{ route('izin.edit', ['id' => $permission->id]) }}" class="btn btn-warning">Edit</a>
+                    <a href="{{ route('izin-edit-create', ['id' => $permission->id]) }}" class="btn btn-warning">Edit</a>
                 </div>
             </div>
         </div>

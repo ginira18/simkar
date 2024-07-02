@@ -13,8 +13,20 @@ class Salary extends Model
     //     'amount' => 'string',
     // ];
 
+    // public function employee()
+    // {
+    //     return $this->hasOne(Employee::class);
+    // }
+
+    protected $fillable = [
+        'id',
+        'base_salary',
+        'fix_allowance',
+        'status',
+    ];
+
     public function employee()
     {
-        return $this->hasOne(Employee::class);
+        return $this->belongsTo(Employee::class, 'id', 'id');
     }
 }

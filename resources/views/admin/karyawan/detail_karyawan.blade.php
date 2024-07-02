@@ -158,7 +158,7 @@
 
                             <div class="col-sm-9">
                                 <div class="form-group row mb-0">
-                                    <label class="col-sm-9 col-form-label">Jaminan Kesehatan</label>
+                                    <label class="col-sm-9 col-form-label">Asuransi Ketenagakerjaan</label>
                                     <div class="col-sm-4">
                                         <div class="form-check">
                                             <label class="form-check-label">

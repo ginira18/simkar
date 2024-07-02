@@ -44,7 +44,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-outline-primary">Detail</button>
+                                        <a href="{{ route('salary.show', $employee->id) }}" class="btn btn-outline-primary">Detail</a>
                                     </td>
                                 </tr>
                             @endforeach

@@ -123,7 +123,7 @@ class AttendanceController extends Controller
 
         if ($attendance) {
             if (now()->diffInSeconds($attendance->check_in) < 1) {
-                return redirect(route("dashboard-kehadiran.create"))->with('status_error', "Karyawan sudah melakukan absen hari ini!");
+                return redirect(route("dashboard-kehadiran.create"))->with('status_error', "Tunggu beberapa saat lagi untuk melakukan presensi!");
             }
             $attendance->update([
                 'check_out' => now(),
@@ -131,7 +131,7 @@ class AttendanceController extends Controller
         } else {
             $checkInTime = now();
             $lateTime = now()->setTime(19, 0, 0);
-    
+
             Attendance::create([
                 'employee_id' => $employee->id,
                 'date' => now(),
@@ -144,11 +144,62 @@ class AttendanceController extends Controller
         return redirect(route("dashboard-kehadiran.create"))->with('status_success', "Absen berhasil!");
     }
 
+    public function endAttendance(Request $request)
+    {
+        // Lakukan validasi atau logika lain yang diperlukan di sini
+        // Contoh: Menutup presensi hari ini dan mengisi alpha jika diperlukan
+
+        $today = Carbon::now()->toDateString();
+
+        // Misalnya, menutup presensi untuk semua karyawan yang belum absen atau izin diapprove
+        $employees = Employee::all();
+
+        foreach ($employees as $employee) {
+            $attendance = Attendance::where('employee_id', $employee->id)
+                ->whereDate('date', $today)
+                ->first();
+
+            if (!$attendance) {
+                // Jika belum ada presensi hari ini, buat data alpha
+                Attendance::create([
+                    'employee_id' => $employee->id,
+                    'date' => $today,
+                    'status' => 'alpha',
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('status_success', 'Presensi hari ini telah ditutup.');
+    }
+
+    public function riwayat_kehadiran(Request $request)
+    {
+        $search = $request->input('search');
+
+        $query = Attendance::query();
+
+        if ($search) {
+            $query->whereHas('employee', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('NIP', 'like', "%{$search}%")
+                    ->orWhereHas('department', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
+            })
+                ->orWhere('date', 'like', "%{$search}%")
+                ->orWhere('keterangan', 'like', "%{$search}%")
+                ->orWhere('status', 'like', "%{$search}%");
+        }
+
+        $attendances = $query->paginate(5);
+
+        return view('admin.kehadiran.riwayat_kehadiran', ['attendances' => $attendances]);
+    }
 
     // Karyawan
     public function index_karyawan()
     {
-     
+
         return view(
             'pegawai.kehadiran',
             [
@@ -209,6 +260,25 @@ class AttendanceController extends Controller
     {
         $permission = Permission::findOrFail($id);
         return view('pegawai.edit_izin', compact('permission'));
+    }
+
+    public function izin_update(Request $request, $id)
+    {
+        $permission = Permission::findOrFail($id);
+
+        $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'reason' => 'required|string',
+        ]);
+
+        $permission->update([
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'reason' => $request->reason,
+        ]);
+
+        return redirect()->route('izin-karyawan')->with('status_success', 'Izin berhasil diperbarui!');
     }
 
 

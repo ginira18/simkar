@@ -30,12 +30,12 @@ return new class extends Migration
             $table->string('rfid_number');
             $table->boolean('is_active')->default(true);
             $table->unsignedBigInteger('department_id');
-            $table->unsignedBigInteger('salary_id');
+            // $table->unsignedBigInteger('salary_id');
             $table->timestamps();
 
 
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
-            $table->foreign('salary_id')->references('id')->on('salaries')->onDelete('cascade');
+            // $table->foreign('salary_id')->references('id')->on('salaries')->onDelete('cascade');
         });
     }
 

@@ -15,14 +15,18 @@ class SalarySeeder extends Seeder
     {
         DB::table('salaries')->insert([
             [
+                'id' => 1,
                 'base_salary' => 5000000,
                 'fix_allowance' => 1000000,
+                'status' => 'belum_diberikan',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
+                'id' => 2,
                 'base_salary' => 6000000,
                 'fix_allowance' => 1200000,
+                'status' => 'belum_diberikan',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

@@ -18,7 +18,7 @@
                 <form action="{{ route('karyawan.store') }}" method="POST">
                     @csrf
 
-                    {{-- @if ($errors->any())
+                    @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul class="m-0">
                                 @foreach ($errors->all() as $error)
@@ -26,7 +26,7 @@
                                 @endforeach
                             </ul>
                         </div>
-                    @endif --}}
+                    @endif
                     <div class="row">
                         {{-- kiri --}}
                         <div class="col-md-6">
@@ -203,6 +203,11 @@
                                         <input type="text" class="form-control" id="fix_allowance"
                                             name="fix_allowance">
                                     </div>
+                                    @if ($errors->has('fix_allowance'))
+                                        <label class="text-danger">
+                                            {{ $errors->first('fix_allowance') }}
+                                        </label>
+                                    @endif
                                 </div>
                             </div>
 

@@ -34,7 +34,14 @@
             <div class="col-sm-12 grid-margin card rounded">
                 <div class="card-body">
                     <h4 class="card-title">Daftar Kehadiran</h4>
-                    <form>
+                    {{-- <form action="{{ route('end-attendance') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">Akhiri Presensi Hari Ini</button>
+                    </form> --}}
+                    <form action="{{ route('end-attendance') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">Akhiri Presensi Hari Ini</button>
+                        
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -59,10 +66,26 @@
                                                 <label class="badge badge-success">Tepat Waktu</label>
                                             @elseif($attendance->keterangan == 'terlambat')
                                                 <label class="badge badge-danger">Terlambat</label>
+                                            @elseif($attendance->status == 'alpha')
+                                                <label class="badge badge-danger">Tidak Masuk</label>
+                                            @elseif($attendance->status == 'izin')
+                                                <label class="badge badge-warning">Izin</label>
                                             @endif
                                         </td>
-                                        <td>{{ $attendance->check_in }}</td>
-                                        <td>{{ $attendance->check_out }}</td>
+                                        <td>
+                                            @if ($attendance->check_in)
+                                                {{ $attendance->check_in }}
+                                            @elseif ($attendance->status == 'alpha' || $attendance->status == 'izin')
+                                                <h3>-</h3>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($attendance->check_out)
+                                                {{ $attendance->check_out }}
+                                            @elseif ($attendance->status == 'alpha' || $attendance->status == 'izin')
+                                                <h3>-</h3>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

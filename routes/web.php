@@ -7,7 +7,8 @@
     use App\Http\Controllers\DashboardController;
     use App\Http\Controllers\EmployeeSettingController;
     use App\Http\Controllers\LoginController;
-use App\Http\Controllers\SalaryController;
+    use App\Http\Controllers\SalaryController;
+use App\Models\Attendance;
 
     /*
     |--------------------------------------------------------------------------
@@ -40,17 +41,23 @@ use App\Http\Controllers\SalaryController;
         Route::resource('pengaturan-karyawan', EmployeeSettingController::class);
         Route::post('/pengaturan-karyawan/{id}/deactivate', [EmployeeSettingController::class, 'deactivate'])->name('pengaturan-karyawan.deactivate');
         Route::post('/pengaturan-karyawan/{id}/activate', [EmployeeSettingController::class, 'activate'])->name('pengaturan-karyawan.activate');
-        
+
         // Kehadiran
         Route::resource('dashboard-kehadiran', AttendanceController::class);
         Route::get('/dashboard-kehadiran/current-time', [AttendanceController::class, 'getCurrentTime'])->name('dashboard-kehadiran.current-time');
         Route::get('/dashboard-izin', [AttendanceController::class, 'izin_admin'])->name('dashboard-izin');
         Route::get('/admin/izin/{id}', [AttendanceController::class, 'detail_izin_admin'])->name('detail-izin-admin');
         Route::post('/admin/izin/{id}/approve', [AttendanceController::class, 'izin_approve'])->name('approve-izin');
+        Route::post('/end-attendance', [AttendanceController::class, 'endAttendance'])->name('end-attendance');
+        Route::get('/riwayat-kehadiran', [AttendanceController::class, 'riwayat_kehadiran'])->name('riwayat-kehadiran');
+        
+
 
         // Gaji
         Route::resource('dashboard-gaji', SalaryController::class);
-
+        Route::get('/salary/{id}', [SalaryController::class, 'show'])->name('salary.show');
+        Route::post('gaji/{id}/give-salary', [SalaryController::class, 'giveSalary'])->name('gaji.give-salary');
+        // Route::post('dashboard-riwayat_gaji', [SalaryController::class, 'salaryHistory']);
     });
 
     // presensi
@@ -69,9 +76,9 @@ use App\Http\Controllers\SalaryController;
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
     // Gaji
-    Route::get('/gaji', function () {
-        return view('admin/gaji/daftar_gaji');
-    });
+    // Route::get('/gaji', function () {
+    //     return view('admin/gaji/daftar_gaji');
+    // });
 
     //Laporan
     Route::get('/laporan_gaji', function () {
@@ -90,8 +97,8 @@ use App\Http\Controllers\SalaryController;
         Route::get('izin-karyawan/create', [AttendanceController::class, 'izin_create'])->name('izin-karyawan-create');;
         Route::post('izin-karyawan/store', [AttendanceController::class, 'izin_store'])->name('izin-karyawan-store');
         Route::get('/izin/{id}/detail', [AttendanceController::class, 'izin_detail'])->name('izin.detail');
-        Route::get('/izin/edit/{id}', [AttendanceController::class, 'izin_edit'])->name('izin.edit');
-        Route::get('/izin/edit/{id}', [AttendanceController::class, 'izin_edit'])->name('izin.edit');
+        Route::get('/izin/edit/{id}', [AttendanceController::class, 'izin_edit'])->name('izin-edit-create');
+        Route::put('izin/{id}/edit', [AttendanceController::class, 'izin_update'])->name('izin-edit-update');
 
 
 

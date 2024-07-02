@@ -44,44 +44,33 @@ class EmployeeController extends Controller
     {
         // return request()->all();
 
-        $validated = $request->validate(
-            [
-                'nip' => 'required|unique:employees,NIP|numeric',
-                'name' => 'required',
-                'email' => 'required|email|unique:employees',
-                'birth_date' => 'required|date',
-                'gender' => 'required',
-                'religion' => 'required',
-                'phone_number' => 'required',
-                'last_education' => 'required',
-                'address' => 'required',
-                'hire_date' => 'required|date',
-                'hire_date_end' => 'required|date',
-                'position' => 'required',
-                'employee_type' => 'required',
-                'base_salary' => 'required',
-                'fix_allowance' => 'required',
-                'bpjs' => 'required',
-                'rfid_number' => 'unique:employees',
-            ]
-        );
+        $validated = $request->validate([
+            'nip' => 'required|unique:employees,NIP|numeric',
+            'name' => 'required',
+            'email' => 'required|email|unique:employees',
+            'birth_date' => 'required|date',
+            'gender' => 'required',
+            'religion' => 'required',
+            'phone_number' => 'required',
+            'last_education' => 'required',
+            'address' => 'required',
+            'hire_date' => 'required|date',
+            'hire_date_end' => 'required|date',
+            'position' => 'required',
+            'employee_type' => 'required',
+            'base_salary' => 'required',
+            'fix_allowance' => 'required',
+            'bpjs' => 'required',
+            'rfid_number' => 'unique:employees',
+            'department_id' => 'required|exists:departments,id',
+        ]);
 
+        // Menghapus titik dari nominal gaji
+        $base_salary = str_replace(".", "", $request->base_salary);
+        $fix_allowance = str_replace(".", "", $request->fix_allowance);
 
-        $request["base_salary"] = str_replace(".", "", $request->base_salary);
-        $request["fix_allowance"] = str_replace(".", "", $request->fix_allowance);
-
-        $salary = Salary::where('base_salary', $request->base_salary)->where('fix_allowance', $request->fix_allowance)->first();
-        if (!$salary) {
-            $salary_id = Salary::insertGetId([
-                'base_salary' => $request->base_salary,
-                'fix_allowance' => $request->fix_allowance,
-            ]);
-        } else {
-            $salary_id = $salary->id;
-        }
-
-
-        Employee::insert([
+        // create ke tabel employees
+        $employee = Employee::create([
             "NIP" => $request->nip,
             "name" => $request->name,
             "email" => $request->email,
@@ -97,8 +86,14 @@ class EmployeeController extends Controller
             "employee_type" => $request->employee_type,
             "bpjs" => $request->bpjs,
             "department_id" => $request->department_id,
-            "salary_id" => $salary_id,
             "rfid_number" => $request->rfid_number,
+        ]);
+
+        // create ke tabel salaries
+        Salary::create([
+            "id" => $employee->id,
+            "base_salary" => $base_salary,
+            "fix_allowance" => $fix_allowance,
         ]);
 
         return redirect('karyawan')->with('success', 'Data Karyawan Berhasil Ditambahkan');
@@ -147,9 +142,9 @@ class EmployeeController extends Controller
     {
         $employee = Employee::findOrFail($id);
         $validated = $request->validate([
-            'nip' => 'required|numeric|unique:employees,NIP,' . $employee->id,
+            'nip' => 'required|numeric|unique:employees,NIP,' . $id,
             'name' => 'required',
-            'email' => 'required|email|unique:employees,email,' . $employee->id,
+            'email' => 'required|email|unique:employees,email,' . $id,
             'birth_date' => 'required|date',
             'gender' => 'required',
             'religion' => 'required',
@@ -163,43 +158,38 @@ class EmployeeController extends Controller
             'base_salary' => 'required',
             'fix_allowance' => 'required',
             'bpjs' => 'required',
-            'rfid_number' => 'nullable|unique:employees,rfid_number,' . $employee->id,
+            'rfid_number' => 'unique:employees,rfid_number,' . $id,
+            'department_id' => 'required|exists:departments,id',
         ]);
 
-        $validated["base_salary"] = str_replace(".", "", $validated["base_salary"]);
-        $validated["fix_allowance"] = str_replace(".", "", $validated["fix_allowance"]);
+        // Menghapus titik dari nominal gaji
+        $base_salary = str_replace(".", "", $request->base_salary);
+        $fix_allowance = str_replace(".", "", $request->fix_allowance);
 
-        $salary = Salary::where('base_salary', $validated["base_salary"])
-            ->where('fix_allowance', $validated["fix_allowance"])
-            ->first();
-
-        if (!$salary) {
-            $salary_id = Salary::insertGetId([
-                'base_salary' => $validated["base_salary"],
-                'fix_allowance' => $validated["fix_allowance"],
-            ]);
-        } else {
-            $salary_id = $salary->id;
-        }
-
+        $employee = Employee::findOrFail($id);
         $employee->update([
-            "NIP" => $validated["nip"],
-            "name" => $validated["name"],
-            "email" => $validated["email"],
-            "birth_date" => $validated["birth_date"],
-            "gender" => $validated["gender"],
-            "religion" => $validated["religion"],
-            "phone_number" => $validated["phone_number"],
-            "last_education" => $validated["last_education"],
-            "address" => $validated["address"],
-            "hire_date" => $validated["hire_date"],
-            "hire_date_end" => $validated["hire_date_end"],
-            "position" => $validated["position"],
-            "employee_type" => $validated["employee_type"],
-            "bpjs" => $validated["bpjs"],
+            "NIP" => $request->nip,
+            "name" => $request->name,
+            "email" => $request->email,
+            "birth_date" => $request->birth_date,
+            "gender" => $request->gender,
+            "religion" => $request->religion,
+            "phone_number" => $request->phone_number,
+            "last_education" => $request->last_education,
+            "address" => $request->address,
+            "hire_date" => $request->hire_date,
+            "hire_date_end" => $request->hire_date_end,
+            "position" => $request->position,
+            "employee_type" => $request->employee_type,
+            "bpjs" => $request->bpjs,
             "department_id" => $request->department_id,
-            "salary_id" => $salary_id,
-            "rfid_number" => $validated["rfid_number"],
+            "rfid_number" => $request->rfid_number,
+        ]);
+
+        $salary = Salary::where('id', $id)->firstOrFail();
+        $salary->update([
+            "base_salary" => $base_salary,
+            "fix_allowance" => $fix_allowance,
         ]);
 
         return redirect('karyawan')->with('success', 'Data Karyawan Berhasil Diperbarui');
