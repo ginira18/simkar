@@ -19,12 +19,12 @@ class SalaryController extends Controller
 
         return view('admin.gaji.daftar_gaji')->with('employees', $employees);
     }
-    // public function salaryHistory()
-    // {
-    //     $employees = Employee::with(['department', 'salary'])->get();
+    public function salaryHistory()
+    {
+        $employees = Employee::with(['department', 'salaryHistories'])->get();
 
-    //     return view('admin.gaji.daftar_gaji')->with('employees', $employees);
-    // }
+        return view('admin.gaji.daftar_gaji')->with('employees', $employees);
+    }
 
     /**
      * Show the form for creating a new resource.

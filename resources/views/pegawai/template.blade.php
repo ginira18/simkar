@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Simkar')</title>
     @vite(['resources/css/app.css'])
+
 </head>
 
 <body>
@@ -92,7 +93,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="">
+                        <a class="nav-link" href="{{ route ('laporan-karyawan')}}">
                             <span class="menu-title">Laporan Harian</span>
                             <i class="icon-screen-desktop menu-icon"></i>
                         </a>
@@ -135,7 +136,6 @@
     <script src="{{ asset('./vendors/chartist/chartist.min.js') }}"></script> --}}
 
     @yield('scripts')
-
 </body>
 
 </html>

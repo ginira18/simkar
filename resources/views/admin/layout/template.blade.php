@@ -90,7 +90,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/laporan_karyawan">
+                    <a class="nav-link" href="{{ route ('dashboard-laporan.index')}}">
                             <span class="menu-title">Laporan</span>
                             <i class="icon-globe menu-icon"></i>
                         </a>
@@ -108,7 +108,7 @@
                                     <a class="nav-link" href="{{ route ('dashboard-gaji.index')}}">Gaji</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="">Riwayat Gaji</a>
+                                    <a class="nav-link" href="{{ route ('dashboard-riwayat_gaji')}}">Riwayat Gaji</a>
                                 </li>
                             </ul>
                         </div>

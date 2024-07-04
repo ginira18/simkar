@@ -51,4 +51,8 @@ class Employee extends Model
     {
         return $this->hasMany(Permission::class);
     }
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
 }
