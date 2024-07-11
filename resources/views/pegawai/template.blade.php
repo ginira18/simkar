@@ -99,7 +99,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="">
+                        <a class="nav-link" href="{{ route ('gaji-karyawan')}}">
                             <span class="menu-title">Gaji</span>
                             <i class="icon-screen-desktop menu-icon"></i>
                         </a>

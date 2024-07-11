@@ -222,6 +222,6 @@ class EmployeeController extends Controller
         // return redirect('/karyawan')->with('success', 'Data Karyawan Berhasil Dihapus');
         $employee = Employee::findOrFail($id);
         $employee->delete();
-        return redirect('karyawan')->with('success', 'Data Karyawan Berhasil Diperbarui');
+        return redirect('karyawan')->with('success', 'Data Karyawan Berhasil Dihapus');
     }
 }

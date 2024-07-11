@@ -31,6 +31,11 @@ class RegisterController extends Controller
 
         // Temukan karyawan berdasarkan email
         $employee = Employee::where('email', $request->email)->first();
+        $user = User::where('username', $request->username)->first();
+
+        if ($user && $employee) {
+            return redirect()->back()->with('status_error', 'Username atau email sudah terdaftar')->withInput();
+        }
 
         // Periksa apakah akun sudah terdaftar
         $user = User::where('id', $employee->id)->first();

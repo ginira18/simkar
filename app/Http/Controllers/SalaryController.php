@@ -19,11 +19,18 @@ class SalaryController extends Controller
 
         return view('admin.gaji.daftar_gaji')->with('employees', $employees);
     }
+    // public function salaryHistory()
+    // {
+    //     $employees = Employee::with(['department', 'salaryHistories'])->get();
+
+    //     return view('admin.gaji.riwayat_gaji')->with('employees', $employees);
+    // }
     public function salaryHistory()
     {
-        $employees = Employee::with(['department', 'salaryHistories'])->get();
+        $salaryHistories = SalaryHistory::with(['employee'])
+        ->get();
 
-        return view('admin.gaji.daftar_gaji')->with('employees', $employees);
+        return view('admin.gaji.riwayat_gaji')->with('salaryHistories', $salaryHistories);
     }
 
     /**
@@ -49,7 +56,7 @@ class SalaryController extends Controller
     {
         $employee = Employee::with('department', 'salary')->findOrFail($id);
 
-        // Hitung jumlah kehadiran dengan status masing-masing
+        // Hitung jumlah kehadiran 
         $izin = Attendance::where('employee_id', $id)->where('status', 'izin')->count();
         $alpha = Attendance::where('employee_id', $id)->where('status', 'alpha')->count();
         $terlambat = Attendance::where('employee_id', $id)->where('keterangan', 'terlambat')->count();
@@ -91,7 +98,7 @@ class SalaryController extends Controller
         $salaryHistory->total_salary = $validatedData['total_salary'];
         $salaryHistory->save();
 
-        $employee->salary->status = 'diberikan';
+        // $employee->salary->status = 'diberikan';
         $employee->salary->save();
 
         return redirect()->route('dashboard-gaji.index', $id)->with('success', 'Gaji berhasil diberikan dan disimpan ke dalam riwayat.');
@@ -119,5 +126,34 @@ class SalaryController extends Controller
     public function destroy(Salary $salary)
     {
         //
+    }
+
+    // Karyawan
+    public function index_karyawan()
+    {
+        $employee = auth()->user();
+        $salaryHistories = SalaryHistory::where('employee_id', $employee->id)->with('employee.department')->get();
+
+        return view('pegawai.gaji')->with('salaryHistories', $salaryHistories);
+    }
+
+    public function show_karyawan($id)
+    {
+        $salaryHistory = SalaryHistory::with('employee.department')->findOrFail($id);
+
+        // Hitung jumlah kehadiran dengan status masing-masing
+        $employeeId = $salaryHistory->employee_id;
+        $izin = Attendance::where('employee_id', $employeeId)->where('status', 'izin')->count();
+        $alpha = Attendance::where('employee_id', $employeeId)->where('status', 'alpha')->count();
+        $terlambat = Attendance::where('employee_id', $employeeId)->where('keterangan', 'terlambat')->count();
+
+        return view('pegawai.detail_gaji', compact('salaryHistory', 'izin', 'alpha', 'terlambat'));
+    }
+
+    public function slip($id)
+    {
+        $salaryHistory = SalaryHistory::findOrFail($id);
+
+        return view('slip_gaji', compact('salaryHistory'));
     }
 }

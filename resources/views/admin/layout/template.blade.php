@@ -91,7 +91,7 @@
                     </li>
                     <li class="nav-item">
                     <a class="nav-link" href="{{ route ('dashboard-laporan.index')}}">
-                            <span class="menu-title">Laporan</span>
+                            <span class="menu-title">Laporan Harian</span>
                             <i class="icon-globe menu-icon"></i>
                         </a>
                     </li>
@@ -113,6 +113,13 @@
                             </ul>
                         </div>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route ('dashboard.rekap')}}">
+                                <span class="menu-title">Rekap Bulanan</span>
+                                <i class="icon-globe menu-icon"></i>
+                            </a>
+                        </li>
                 </ul>
 
             </nav>

@@ -9,6 +9,8 @@
     use App\Http\Controllers\LoginController;
     use App\Http\Controllers\SalaryController;
     use App\Http\Controllers\ReportController;
+    use App\Http\Controllers\SummaryController;
+
     use App\Models\Attendance;
 
     /*
@@ -61,8 +63,12 @@
         // Laporan
         Route::resource('dashboard-laporan', ReportController::class);
 
+        // Rekap
+        Route::get('dashboard-rekap', [SummaryController::class, 'index'])->name('dashboard.rekap');
+        Route::get('detail_rekap/{month}', [SummaryController::class, 'show'])->name('detail-rekap');
+        Route::get('detail_rekap/{month}/export-csv', [SummaryController::class, 'exportCsv'])->name('dashboard-laporan.exportCsv');
     });
-    
+
     Route::middleware('employee')->group(function () {
 
         Route::get('dashboard-karyawan', [DashboardController::class, 'index_karyawan'])->name('dashboard-karyawan');;
@@ -82,13 +88,16 @@
         Route::get('laporan/{id}', [ReportController::class, 'show_karyawan_report'])->name('laporan.show');
         Route::get('/karyawan/laporan/{id}/edit', [ReportController::class, 'edit_karyawan_report'])->name('karyawan.laporan.edit');
         Route::put('/laporan-karyawan/{id}/update', [ReportController::class, 'update_karyawan_report'])->name('laporan-karyawan.update');
+        // Gaji
+        Route::get('/gaji-karyawan', [SalaryController::class, 'index_karyawan'])->name('gaji-karyawan');
+        Route::get('karyawan/gaji/{id}', [SalaryController::class, 'show_karyawan'])->name('detail-gaji-karyawan');
+        // Route::get('/gaji-karyawan/{id}/slip', [SalaryController::class, 'printSlipGaji'])->name('slip-gaji-karyawan');
+        Route::get('/gaji/slip/{id}', [SalaryController::class, 'slip'])->name('gaji.slip');
     });
 
     // presensi
     Route::get('/presensi', [AttendanceController::class, 'presensi_guest_create'])->name('presensi');
     Route::post('/presensi', [AttendanceController::class, 'presensi_guest_store'])->name('presensi');
-
-
 
     // Register
     Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register')->middleware('guest');
@@ -105,15 +114,18 @@
     // });
 
     //Laporan
-    Route::get('/laporan_gaji', function () {
-        return view('laporan/laporan_gaji');
-    });
-    Route::get('/laporan_karyawan', function () {
-        return view('laporan/laporan_karyawan');
-    });
+    // Route::get('/laporan_gaji', function () {
+    //     return view('laporan/laporan_gaji');
+    // });
+    // Route::get('/laporan_karyawan', function () {
+    //     return view('laporan/laporan_karyawan');
+    // });
 
+    // slip_gaji
+    // Route::get('/slip-gaji',function(){
+    //     return view('slip_gaji');
+    // });
 
-    
     // Route::get('/kehadiran', function () {
     //     return view('pengguna/kehadiran');
     // });

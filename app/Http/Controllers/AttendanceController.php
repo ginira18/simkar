@@ -144,33 +144,29 @@ class AttendanceController extends Controller
         return redirect(route("dashboard-kehadiran.create"))->with('status_success', "Absen berhasil!");
     }
 
-    public function endAttendance(Request $request)
-    {
-        // Lakukan validasi atau logika lain yang diperlukan di sini
-        // Contoh: Menutup presensi hari ini dan mengisi alpha jika diperlukan
+    // public function endAttendance(Request $request)
+    // {
 
-        $today = Carbon::now()->toDateString();
+    //     $today = Carbon::now()->toDateString();
 
-        // Misalnya, menutup presensi untuk semua karyawan yang belum absen atau izin diapprove
-        $employees = Employee::all();
+    //     $employees = Employee::all();
 
-        foreach ($employees as $employee) {
-            $attendance = Attendance::where('employee_id', $employee->id)
-                ->whereDate('date', $today)
-                ->first();
+    //     foreach ($employees as $employee) {
+    //         $attendance = Attendance::where('employee_id', $employee->id)
+    //             ->whereDate('date', $today)
+    //             ->first();
 
-            if (!$attendance) {
-                // Jika belum ada presensi hari ini, buat data alpha
-                Attendance::create([
-                    'employee_id' => $employee->id,
-                    'date' => $today,
-                    'status' => 'alpha',
-                ]);
-            }
-        }
+    //         if (!$attendance) {
+    //             Attendance::create([
+    //                 'employee_id' => $employee->id,
+    //                 'date' => $today,
+    //                 'status' => 'alpha',
+    //             ]);
+    //         }
+    //     }
 
-        return redirect()->back()->with('status_success', 'Presensi hari ini telah ditutup.');
-    }
+    //     return redirect()->back()->with('status_success', 'Presensi hari ini telah ditutup.');
+    // }
 
     public function riwayat_kehadiran(Request $request)
     {

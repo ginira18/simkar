@@ -151,7 +151,7 @@
                                 @endif
                             </div>
                         </div>
-                        <label class="col-sm-3 col-form-label">Status Gaji</label>
+                        {{-- <label class="col-sm-3 col-form-label">Status Gaji</label>
                         <div class="col-sm-6">
                             <div class="form-group m-0">
                                 @if ($employee->salary->status == 'diberikan')
@@ -162,8 +162,8 @@
                                     <label class="badge badge-warning">Tidak ada data gaji</label>
                                 @endif
                             </div>
-                        </div>
-                        <div class="col-md-12 mt-4">
+                        </div> --}}
+                        <div class="col-md-12 mt-5">
                             <a href="{{ route('dashboard-gaji.index') }}" class="btn btn-secondary">Kembali</a>
                             <button type="submit" class="btn btn-primary">Berikan Gaji</button>
                         </div>

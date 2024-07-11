@@ -7,6 +7,7 @@ use App\Models\User;
 // use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Carbon\Carbon;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -29,9 +30,10 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('admin', function (User $user) {
             return $user->roles === 'admin';
         });
-        
+
         Gate::define('employee', function (User $user) {
             return $user->roles === 'pegawai';
         });
+
     }
 }

@@ -40,7 +40,7 @@
                     </form> --}}
                     <form action="{{ route('end-attendance') }}" method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-danger">Akhiri Presensi Hari Ini</button>
+                        {{-- <button type="submit" class="btn btn-danger">Akhiri Presensi Hari Ini</button> --}}
                         
                         <table class="table table-striped">
                             <thead>
