@@ -35,9 +35,12 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{ \Carbon\Carbon::parse($salaryHistory->employee->salary->created_at)->format('F') }}
+                                        {{ \Carbon\Carbon::parse($salaryHistory->created_at)->format('F') }}
+                                    {{-- <td>{{ Carbon::parse($salaryHistory->month)->format('F Y') }}</td> --}}
+
                                     <td>
-                                        <a href="{{ route('salary.show', $salaryHistory->id) }}" class="btn btn-outline-primary">Detail</a>
+                                        <a href="{{ route('salary.show', $salaryHistory->id) }}"
+                                            class="btn btn-outline-primary">Detail</a>
                                     </td>
                                 </tr>
                             @endforeach

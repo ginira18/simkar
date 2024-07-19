@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Salary;
 use App\Models\Employee;
@@ -28,7 +29,7 @@ class SalaryController extends Controller
     public function salaryHistory()
     {
         $salaryHistories = SalaryHistory::with(['employee'])
-        ->get();
+            ->get();
 
         return view('admin.gaji.riwayat_gaji')->with('salaryHistories', $salaryHistories);
     }
@@ -56,23 +57,63 @@ class SalaryController extends Controller
     {
         $employee = Employee::with('department', 'salary')->findOrFail($id);
 
-        // Hitung jumlah kehadiran 
-        $izin = Attendance::where('employee_id', $id)->where('status', 'izin')->count();
-        $alpha = Attendance::where('employee_id', $id)->where('status', 'alpha')->count();
-        $terlambat = Attendance::where('employee_id', $id)->where('keterangan', 'terlambat')->count();
+        // Set tanggal mulai dan akhir
+        $startDate = Carbon::now()->day(25)->startOfDay();
+        $endDate = Carbon::now()->addMonth()->day(25)->startOfDay();
+
+        // Jika bulan ini belum tanggal 25, set tanggal mulai ke 25 bulan sebelumnya dan tanggal akhir ke 25 bulan ini
+        if (Carbon::now()->day < 25) {
+            $startDate = Carbon::now()->subMonth()->day(25)->startOfDay();
+            $endDate = Carbon::now()->day(25)->startOfDay();
+        }
+
+        // Hitung jumlah hari kerja
+        $jumlahHariKerja = 0;
+        $currentDate = $startDate->copy();
+        while ($currentDate->lte($endDate)) {
+            if (!$currentDate->isSunday()) {
+                $jumlahHariKerja++;
+            }
+            $currentDate->addDay();
+        }
+        // Hitung jumlah kehadiran dan izin
+        $hadir = Attendance::where('employee_id', $id)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->where('status', 'hadir')
+            ->count();
+        $izin = Attendance::where('employee_id', $id)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->where('status', 'izin')
+            ->count();
+
+        // Hitung jumlah alpha
+        $alpha = $jumlahHariKerja - $hadir - $izin;
+
+
+        // Hitung jumlah terlambat
+        $terlambat = Attendance::where('employee_id', $id)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->where('keterangan', 'terlambat')
+            ->count();
 
         // Hitung potongan Kehadiran
         $potonganKehadiran = $terlambat * 10000;
-        $potonganKehadiran += $alpha > 0 ? 50000 : 0;
+        $potonganKehadiran += $alpha * 50000;
 
-        // Hitung potongan asuransi 
+        // Hitung potongan asuransi
         $potonganAsuransi = $employee->bpjs == 'bpjs' ? ($employee->salary->base_salary + $employee->salary->fix_allowance) * 0.01 : 0;
 
-        // Hitung total gaji setelah potongan
-        $totalGaji = $employee->salary->base_salary + $employee->salary->fix_allowance - $potonganKehadiran - $potonganKehadiran - $potonganAsuransi;
+        // Hitung total gaji untuk karyawan bulanan
+        $totalGaji = 0;
+        if ($employee->employee_type == 'monthly') {
+            $totalGaji = $employee->salary->base_salary + $employee->salary->fix_allowance - $potonganKehadiran - $potonganAsuransi;
+        } elseif ($employee->employee_type == 'daily') {
+            $totalGaji = $employee->salary->base_salary * $hadir - $potonganKehadiran - $potonganAsuransi;
+        }
 
-        return view('admin.gaji.gaji_detail', compact('employee', 'izin', 'terlambat', 'alpha', 'potonganKehadiran', 'potonganAsuransi', 'totalGaji'));
+        return view('admin.gaji.gaji_detail', compact('employee', 'izin', 'terlambat', 'alpha', 'potonganKehadiran', 'potonganAsuransi', 'totalGaji', 'jumlahHariKerja'));
     }
+
 
     public function giveSalary(Request $request, $id)
     {

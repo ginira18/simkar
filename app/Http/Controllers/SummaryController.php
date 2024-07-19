@@ -28,7 +28,9 @@ class SummaryController extends Controller
             ->where('created_at', 'LIKE', $month . '%')
             ->get();
 
-        return view('admin.rekap.detail_rekap', compact('salaryHistories', 'month'));
+        $totalGajiKeseluruhan = $salaryHistories->sum('total_salary');
+
+        return view('admin.rekap.detail_rekap', compact('salaryHistories', 'month', 'totalGajiKeseluruhan'));
     }
 
     public function exportCsv($month)
@@ -41,19 +43,26 @@ class SummaryController extends Controller
         $handle = fopen($filename, 'w+');
         fputcsv($handle, ['No', 'Nama', 'NIP', 'Bagian', 'Jabatan', 'Total Gaji Diterima']);
 
+        $totalGajiKeseluruhan = 0;
+
         foreach ($salaryHistories as $index => $salaryHistory) {
+            $totalGajiKeseluruhan += $salaryHistory->total_salary;
+
             fputcsv($handle, [
                 $index + 1,
                 $salaryHistory->employee->name,
                 $salaryHistory->employee->NIP,
                 $salaryHistory->employee->department->name,
                 $salaryHistory->employee->position,
-                number_format($salaryHistory->total_salary, 0, ',', '.')
+                number_format($salaryHistory->total_salary, 0, ',', '.'),
             ]);
         }
 
+        fputcsv($handle, ['Total Gaji Keseluruhan', '', '', '', '', number_format($totalGajiKeseluruhan, 0, ',', '.'), '', '', '', '']);
+
         fclose($handle);
 
+        // dd($totalGajiKeseluruhan);
         return response()->download($filename)->deleteFileAfterSend(true);
     }
 }
