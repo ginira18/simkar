@@ -92,7 +92,7 @@
                             </div>
 
                             <div class="col-sm-9 mt-4">
-                                <a href="{{ route('karyawan.show', $employee->id) }}" class="btn btn-dark">Kembali</a>
+                                <a href="{{ route('pengaturan-karyawan.show', $employee->id) }}" class="btn btn-dark">Kembali</a>
                             </div>
                         </div>
 

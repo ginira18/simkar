@@ -25,8 +25,8 @@
         </div>
         <form class="mb-3 mt-5" action="{{ route('login') }}" method="POST">
             @csrf
-            <label for="username">Username</label>
-            <input type="username" name="username" id="username" class="form-control mb-3" placeholder="Masukkan username" required>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" class="form-control mb-3" placeholder="Masukkan email" required>
             <label for="password">Password</label>
             <input type="password" name="password" id="password" class="form-control mb-5" placeholder="Masukkan password"
                 required>

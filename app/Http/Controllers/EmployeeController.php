@@ -6,24 +6,32 @@ use App\Models\Employee;
 use App\Models\Department;
 use App\Models\Salary;
 use Illuminate\Http\Request;
+use App\Models\User;
 
-use function Laravel\Prompts\alert;
 
 class EmployeeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $activeEmployees = Employee::where('is_active', true)->get();
+        $search = $request->input('search');
 
-        return view(
-            'admin.karyawan.daftar_karyawan',
-            [
-                'activeEmployees' => $activeEmployees,
-            ]
-        );
+        $activeEmployees = Employee::where('is_active', true)
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('NIP', 'like', "%{$search}%")
+                    ->orWhereHas('department', function ($query) use ($search) {
+                        $query->where('name', 'like', "%{$search}%");
+                    });
+            })
+            ->orderBy('name')
+            ->paginate(15);
+
+        return view('admin.karyawan.daftar_karyawan', [
+            'activeEmployees' => $activeEmployees,
+        ]);
     }
 
     /**
@@ -140,7 +148,7 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $employee = Employee::findOrFail($id);
+        // $employee = Employee::findOrFail($id);
         $validated = $request->validate([
             'nip' => 'required|numeric|unique:employees,NIP,' . $id,
             'name' => 'required',
@@ -192,7 +200,7 @@ class EmployeeController extends Controller
             "fix_allowance" => $fix_allowance,
         ]);
 
-        return redirect('karyawan')->with('success', 'Data Karyawan Berhasil Diperbarui');
+        return redirect()->route('karyawan.show', ['karyawan' => $id])->with('success', 'Data Karyawan Berhasil Diperbarui');
     }
 
     public function deactivate($id)
@@ -223,5 +231,20 @@ class EmployeeController extends Controller
         $employee = Employee::findOrFail($id);
         $employee->delete();
         return redirect('karyawan')->with('success', 'Data Karyawan Berhasil Dihapus');
+    }
+ 
+    public function reset($id)
+    {
+        $employee = Employee::find($id);
+
+        if ($employee) {
+            $user = $employee->user;
+            if ($user) {
+                $user->delete();
+                return redirect()->route('karyawan.show', $id)->with('success', 'Akun karyawan berhasil direset.');
+            }
+
+            return redirect()->route('karyawan.show', $id)->with('error', 'Akun karyawan tidak ditemukan.');
+        }
     }
 }

@@ -47,10 +47,6 @@ class AttendanceController extends Controller
         return view('admin.kehadiran.kehadiran_izin', ['permissions' => Permission::all()]);
     }
 
-    // public function detail_izin_admin()
-    // {
-    //     return view('admin.kehadiran.detail_izin');
-    // }
 
     public function detail_izin_admin($id)
     {
@@ -117,6 +113,10 @@ class AttendanceController extends Controller
             return redirect(route("dashboard-kehadiran.create"))->with('status_error', "Data karyawan tidak ditemukan!");
         }
         $attendance = Attendance::where('employee_id', $employee->id)->whereDate('date', now())->first();
+        if ($attendance && $attendance->status == 'izin') {
+            return redirect(route("dashboard-kehadiran.create"))
+                ->with('status_error', "Anda sedang izin hari ini!");
+        }
         // if ($attendance && $attendance->check_out != null) {
         //     return redirect(route("dashboard-kehadiran.create"))->with('status_error', "Karyawan sudah melakukan absen hari ini!");
         // }
@@ -141,7 +141,7 @@ class AttendanceController extends Controller
             ]);
         }
 
-        return redirect(route("dashboard-kehadiran.create"))->with('status_success', "Absen berhasil!");
+        return redirect(route("dashboard-kehadiran.create"))->with('status_success', "Presensi berhasil!");
     }
 
     // public function endAttendance(Request $request)
@@ -237,7 +237,7 @@ class AttendanceController extends Controller
         if ($request->hasFile('evidence')) {
             $file = $request->file('evidence');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('public/evidence_izin', $filename);
+            $file->storeAs('evidence_izin', $filename);
             $permissionData['evidence'] = $filename;
         }
 

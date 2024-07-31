@@ -19,6 +19,12 @@
                         <h4>*Ubah bagian untuk mengaktifkan lagi karyawan</h4>
                     </div>
                 @endif
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <div>
                     @csrf
                     <div class="row">
@@ -96,7 +102,7 @@
                             </div>
 
                             <div class="col-sm-9 mt-4">
-                                <a href="{{ route('karyawan.index') }}" class="btn btn-dark">Kembali</a>
+                                <a href="{{ route('pengaturan-karyawan.index') }}" class="btn btn-dark">Kembali</a>
                             </div>
                         </div>
 
@@ -199,7 +205,8 @@
                             </div>
 
                             <div class="col-sm-9 mt-5">
-                                <a href="{{ route('karyawan.edit', $employee->id) }}" class="btn btn-warning">Edit</a>
+                                <a href="{{ route('pengaturan-karyawan.edit', $employee->id) }}"
+                                    class="btn btn-warning">Edit</a>
 
                                 <form action="{{ route('karyawan.activate', $employee->id) }}" method="POST"
                                     style="display:inline;">
@@ -207,12 +214,12 @@
                                     <button type="submit" class="btn btn-secondary m-1">Aktif</button>
                                 </form>
 
-                                <form action="{{ route('karyawan.destroy', $employee->id) }}" method="POST"
+                                <form action="{{ route('pengaturan-karyawan.employeeDestroy', $employee->id) }}" method="POST"
                                     style="display:inline;">
                                     @method('DELETE')
                                     @csrf
                                     <button type="submit" class="btn btn-danger"
-                                        onclick="return confirm('Apakah Anda yakin ingin menghapus data karyawan ini?')">Hapus</button>
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus data karyawan ini?')">Hapuss</button>
                                 </form>
                             </div>
                         </div>
@@ -222,28 +229,4 @@
         </div>
     </div>
 
-    {{-- Modal RFID --}}
-    <div class="modal fade" id="modal_tambah_RFID" tabindex="-1" role="dialog" aria-labelledby="modal_tambah_RFID"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="text-align: center">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Tambah RFID</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body p-4">
-                    <form>
-                        <div class="mb-2">
-                            <label>
-                                <h5>Tempelkan Kartu Pada Pembaca RFID</h5>
-                            </label>
-                            <input type="text" class="form-control">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection

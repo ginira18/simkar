@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id')->primary();
             $table->integer('base_salary');
             $table->integer('fix_allowance');
-            $table->enum('status', ['diberikan', 'belum_diberikan'])->default('belum_diberikan');
+            $table->enum('status', ['diberikan', 'belum_diberikan'])->default('belum_diberikan')->nullable();
             $table->timestamps();
             $table->foreign('id')->references('id')->on('employees')->onDelete('cascade');
         });

@@ -16,7 +16,7 @@
             <div class="navbar-brand-wrapper d-flex align-items-center">
                 <a class="navbar-brand brand-logo" href="index.html">
                     <img src="{{ Vite::asset('resources/images/logo-abyaz.png') }} " alt="logo" class="logo mt-3"
-                        style="height: 70px;" />
+                        style="height: 40px;" />
                 </a>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-center flex-grow-1">

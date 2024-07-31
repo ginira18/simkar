@@ -18,38 +18,32 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:employees,email',
-            'username' => 'required|string|unique:users,username',
+            'email' => 'required|email',
             'password' => 'required|string|min:8',
         ]);
 
         if ($validator->fails()) {
-            if ($validator->errors()->has('email')) {
-                return redirect()->back()->with('status_error', 'Email belum terdaftar oleh admin')->withInput();
-            }
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Temukan karyawan berdasarkan email
+        // Cek email di employees
         $employee = Employee::where('email', $request->email)->first();
-        $user = User::where('username', $request->username)->first();
 
-        if ($user && $employee) {
-            return redirect()->back()->with('status_error', 'Username atau email sudah terdaftar')->withInput();
+        if (!$employee) {
+            return redirect()->back()->with('status_error', 'Email belum terdaftar oleh admin')->withInput();
         }
 
-        // Periksa apakah akun sudah terdaftar
-        $user = User::where('id', $employee->id)->first();
-        if ($user && $user->username && $user->password) {
-            return redirect()->back()->with('status_error', 'Akun sudah terdaftar');
+        // Cek email sudah terdaftar di users
+        if (User::where('email', $request->email)->exists()) {
+            return redirect()->route('login')->with('status_error', 'Akun sudah terdaftar. Silahkan Login!')->withInput();
         }
 
-        // Buat user baru
-        $user = User::create([
+        User::create([
             'id' => $employee->id,
-            'username' => $request->username,
+            'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('login')->with('status_success', 'Registration successful');
+        return redirect()->route('login')->with('status_success', 'Registrasi berhasil, Silahkan Login!');
     }
 }

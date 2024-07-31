@@ -18,7 +18,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // Set locale ke Bahasa Indonesia
 
         // Ambil data total gaji karyawan per bulan untuk chart
         $labels = [];
@@ -42,6 +41,8 @@ class DashboardController extends Controller
         $maleEmployees = Employee::where('gender', 'male')->count();
         $femaleEmployees = Employee::where('gender', 'female')->count();
 
+        $monthlyEmployees = Employee::where('employee_type', 'monthly')->count();
+        $dailyEmployees = Employee::where('employee_type', 'daily')->count();
         $totalEmployees = Employee::where('is_active', true)->count();
         $totalPermissionRequests = Permission::where('status', 'pending')->count();
         $activeDepartments = Department::withCount('employees')->get();
@@ -56,6 +57,8 @@ class DashboardController extends Controller
             'activeDepartments' => $activeDepartments,
             'maleEmployees' => $maleEmployees,
             'femaleEmployees' => $femaleEmployees,
+            'monthlyEmployees' => $monthlyEmployees,
+            'dailyEmployees' => $dailyEmployees,
         ]);
     }
 

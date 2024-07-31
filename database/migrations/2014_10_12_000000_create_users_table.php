@@ -14,10 +14,9 @@
             Schema::create('users', function (Blueprint $table) {
                 // $table->id();
                 $table->unsignedBigInteger('id')->primary();
-                $table->string('username')->unique();
-                // $table->timestamp('email_verified_at')->nullable();
+                $table->string('email')->unique();
                 $table->string('password');
-                $table->enum('roles', ['admin' , 'pegawai'])->default('pegawai');
+                $table->enum('roles', ['super_admin', 'admin' , 'pegawai', 'presensi'])->default('pegawai');
                 $table->rememberToken();
                 $table->timestamps();
 

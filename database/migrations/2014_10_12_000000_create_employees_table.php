@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('NIP')->unique();
             $table->string('name');
             $table->string('email')->unique();
-            $table->date('birth_date');
+            $table->date('birth_date')->nullable();
             $table->enum('gender', ['male', 'female']);
             $table->enum('religion', ['Islam', 'Kristen', 'Katholik', 'Hindu', 'Buddha', 'Konghucu', 'Lainnya']);
             $table->string('phone_number');
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->enum('bpjs', ['bpjs', 'no_bpjs']);
             $table->string('rfid_number');
             $table->boolean('is_active')->default(true);
-            $table->unsignedBigInteger('department_id');
+            $table->unsignedBigInteger('department_id')->nullable();
             // $table->unsignedBigInteger('salary_id');
             $table->timestamps();
 

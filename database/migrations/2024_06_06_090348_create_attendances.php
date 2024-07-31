@@ -16,7 +16,7 @@ return new class extends Migration
             $table->date('date');
             $table->time('check_in')->nullable();
             $table->time('check_out')->nullable();
-            $table->enum('status', ['hadir', 'izin', 'alpha'])->default('alpha');
+            $table->enum('status', ['hadir', 'izin']);
             $table->enum('keterangan', ['tepat_waktu', 'terlambat'])->nullable();
             $table->unsignedBigInteger('employee_id');
             $table->timestamps();

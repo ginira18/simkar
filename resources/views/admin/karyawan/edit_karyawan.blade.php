@@ -15,7 +15,7 @@
             <div class="card-body">
                 <h4 class="card-title mb-5">Edit Data Karyawan</h4>
 
-                <form action="{{ route('karyawan.update', $employee->id) }}" method="POST">
+                <form id="employeeForm" action="{{ route('karyawan.update', $employee->id) }}" method="POST">
                     @method('PUT')
                     @csrf
                     <div class="row">
@@ -228,6 +228,13 @@
 
         fixAllowanceInput.addEventListener('input', function() {
             formatNominal(this);
+        });
+
+
+        document.getElementById('employeeForm').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+            }
         });
     </script>
 @endsection

@@ -13,9 +13,9 @@
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="navbar-brand-wrapper d-flex align-items-center">
-                <a class="navbar-brand brand-logo" href="index.html">
+                <a class="navbar-brand brand-logo" href="#">
                     <img src="{{ Vite::asset('resources/images/logo-abyaz.png') }} " alt="logo" class="logo mt-3"
-                        style="height: 70px;" />
+                        style="height: 40px;" />
                 </a>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-center flex-grow-1">

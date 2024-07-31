@@ -51,7 +51,7 @@
                         @else
                             <label class="badge badge-danger">Tidak ada bukti yang dilampirkan</label >
                         @endif
-                    </div>
+                    </div> 
                 </div>
                 <div class="form-group row">
                     <label for="status" class="col-sm-3 col-form-label">Status</label>

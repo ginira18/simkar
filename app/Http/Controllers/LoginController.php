@@ -14,21 +14,22 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('username', 'password');
+        $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
             if ($user->roles == 'admin') {
-                return redirect()->intended('dashboard');
+                return redirect()->intended('dashboard')->with('status_success', 'Login berhasil');
             } elseif ($user->roles == 'pegawai') {
-                return redirect()->intended('dashboard-karyawan');
+                return redirect()->intended('dashboard-karyawan')->with('status_success', 'Login berhasil');
             } else {
                 Auth::logout();
                 return redirect()->back()->with('status_error', 'Anda tidak memiliki akses')->withInput();
             }
         }
 
+        // Jika login gagal
         return redirect()->back()->with('status_error', 'Email atau password salah')->withInput();
     }
 

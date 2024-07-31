@@ -7,7 +7,16 @@
         <div class="card m-1 rounded">
             <div class="card-body">
                 <h4 class="card-title mb-5">Detail Karyawan</h4>
-
+                @if (session('success'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('success') }}
+                    </div>
+                @endif
+                @if (session('error'))
+                    <div class="alert alert-danger" role="alert">
+                        {{ session('error') }}
+                    </div>
+                @endif
                 <div>
                     <div class="row">
                         {{-- kiri --}}
@@ -83,8 +92,14 @@
                                 <textarea class="form-control" id="address" name="address" rows="4" readonly>{{ $employee->address }}</textarea>
                             </div>
 
-                            <div class="col-sm-9 mt-4">
+                            <div class="d-flex mt-4">
                                 <a href="{{ route('karyawan.index') }}" class="btn btn-dark">Kembali</a>
+                                <form class="ml-3" action="{{ route('karyawan.reset', $employee->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-info"
+                                        onclick="return confirm('Apakah Anda yakin ingin mereset akun karyawan ini?')">Reset
+                                        Akun</button>
+                                </form>
                             </div>
                         </div>
 
@@ -104,8 +119,8 @@
 
                             <label class="col-sm-6 col-form-label">Bagian</label>
                             <div class="col-sm-9">
-                                <select class="js-example-basic-single" style="width:100%" id="department" name="department"
-                                    disabled>
+                                <select class="js-example-basic-single" style="width:100%" id="department"
+                                    name="department" disabled>
                                     <option value="{{ $employee->department->id }}" selected>
                                         {{ $employee->department->name }}</option>
                                 </select>
@@ -186,21 +201,22 @@
                                     value="{{ $employee->rfid_number }}" readonly />
                             </div>
 
-                                <div class="col-sm-9 mt-5">
-                                    <a href="{{ route('karyawan.edit', $employee->id) }}" class="btn btn-warning">Edit</a>
-                                    <form action="{{ route('karyawan.deactivate', $employee->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        <button type="submit" class="btn btn-secondary m-1">Non-aktif</button>
-                                    </form>
-                                    
-                                    <form action="{{ route('karyawan.destroy', $employee->id) }}" method="POST"
-                                        style="display:inline;">
-                                        @csrf
-                                        @method('delete')
-                                        <button type="submit" class="btn btn-danger"
-                                            onclick="return confirm('Apakah Anda yakin ingin menghapus data karyawan ini?')">Hapus</button>
-                                    </form>
-                                </div>
+                            <div class="col-sm-9 mt-5">
+                                <a href="{{ route('karyawan.edit', $employee->id) }}" class="btn btn-warning">Edit</a>
+                                <form action="{{ route('karyawan.deactivate', $employee->id) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-secondary m-1">Non-aktif</button>
+                                </form>
+
+                                <form action="{{ route('karyawan.destroy', $employee->id) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf
+                                    @method('delete')
+                                    <button type="submit" class="btn btn-danger"
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus data karyawan ini?')">Hapus</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

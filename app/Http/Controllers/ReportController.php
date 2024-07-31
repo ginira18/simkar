@@ -132,7 +132,7 @@ class ReportController extends Controller
 
     public function show_karyawan_report($id)
     {
-        $report = Report::findOrFail($id); // Cari laporan berdasarkan ID
+        $report = Report::findOrFail($id); 
 
         return view('pegawai.detail_laporan', compact('report'));
     }
@@ -140,7 +140,6 @@ class ReportController extends Controller
     public function edit_karyawan_report($id)
     {
         $report = Report::findOrFail($id);
-        // Pastikan hanya karyawan yang dapat mengedit laporan mereka sendiri
         if ($report->employee_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
@@ -165,7 +164,6 @@ class ReportController extends Controller
             $report->evidence = $evidencePath;
         }
 
-        // Update other fields
         $report->title = $request->title;
         $report->description = $request->description;
         $report->save();

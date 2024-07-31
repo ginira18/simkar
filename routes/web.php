@@ -29,7 +29,6 @@
     // Route::get('/', function () {
     //     return view('login/index');
     // });
-    Route::get('/', [LoginController::class, 'showLoginForm']);
 
     Route::middleware('admin')->group(function () {
         // Dashboard
@@ -37,6 +36,7 @@
         Route::resource('dashboard', DashboardController::class);
         // Karyawan
         Route::resource('karyawan', EmployeeController::class);
+        Route::post('karyawan/{id}/reset', [EmployeeController::class, 'reset'])->name('karyawan.reset');
         Route::post('karyawan/{id}/deactivate', [EmployeeController::class, 'deactivate'])->name('karyawan.deactivate');
         Route::post('karyawan/{id}/activate', [EmployeeController::class, 'activate'])->name('karyawan.activate');
 
@@ -44,6 +44,8 @@
         Route::resource('pengaturan-karyawan', EmployeeSettingController::class);
         Route::post('/pengaturan-karyawan/{id}/deactivate', [EmployeeSettingController::class, 'deactivate'])->name('pengaturan-karyawan.deactivate');
         Route::post('/pengaturan-karyawan/{id}/activate', [EmployeeSettingController::class, 'activate'])->name('pengaturan-karyawan.activate');
+        Route::delete('pengaturan-karyawan/{id}/destroy-employee', [EmployeeSettingController::class, 'employeeDestroy'])->name('pengaturan-karyawan.employeeDestroy');
+        Route::delete('pengaturan-karyawan/{id}/destroy-department', [EmployeeSettingController::class, 'destroyDepartment'])->name('pengaturan-karyawan.destroyDepartment');
 
         // Kehadiran
         Route::resource('dashboard-kehadiran', AttendanceController::class);
@@ -71,7 +73,7 @@
 
     Route::middleware('employee')->group(function () {
 
-        Route::get('dashboard-karyawan', [DashboardController::class, 'index_karyawan'])->name('dashboard-karyawan');;
+        Route::get('dashboard-karyawan', [DashboardController::class, 'index_karyawan'])->name('dashboard-karyawan');
         // kehadiran
         Route::get('kehadiran-karyawan', [AttendanceController::class, 'index_karyawan'])->name('kehadiran-karyawan');;
         // izin
@@ -104,6 +106,7 @@
     Route::post('/register', [RegisterController::class, 'register']);
 
     // Login
+    Route::get('/', [LoginController::class, 'showLoginForm'])->middleware('guest');
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
     Route::post('/login', [LoginController::class, 'login']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

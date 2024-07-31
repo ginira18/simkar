@@ -15,10 +15,10 @@
             <div class="card-body">
                 <h4 class="card-title mb-5">Tambah Data Karyawan</h4>
 
-                <form action="{{ route('karyawan.store') }}" method="POST">
+                <form id="employeeForm" action="{{ route('karyawan.store') }}" method="POST">
                     @csrf
 
-                    @if ($errors->any())
+                    {{-- @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul class="m-0">
                                 @foreach ($errors->all() as $error)
@@ -26,7 +26,7 @@
                                 @endforeach
                             </ul>
                         </div>
-                    @endif
+                    @endif --}}
                     <div class="row">
                         {{-- kiri --}}
                         <div class="col-md-6">
@@ -217,16 +217,14 @@
                                     <div class="col-sm-4">
                                         <div class="form-check">
                                             <label class="form-check-label">
-                                                <input type="radio" class="form-check-input" id="bpjs"
-                                                    name="bpjs" value="bpjs" checked> Bpjs
+                                                <input type="radio" class="form-check-input" id="bpjs" name="bpjs" value="bpjs" checked> Bpjs
                                             </label>
                                         </div>
                                     </div>
                                     <div class="col-sm-5">
                                         <div class="form-check">
                                             <label class="form-check-label">
-                                                <input type="radio" class="form-check-input" id="bpjs"
-                                                    name="bpjs" value="no_bpjs"> Non-Bpjs </label>
+                                                <input type="radio" class="form-check-input" id="bpjs" name="bpjs" value="no_bpjs"> Non-Bpjs </label>
                                         </div>
                                     </div>
                                 </div>
@@ -240,6 +238,7 @@
                                     <button type="submit" class="btn btn-primary ">Simpan</button>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                 </form>
@@ -263,13 +262,18 @@
         var baseSalariesInput = document.getElementById('base_salary');
         var fixAllowanceInput = document.getElementById('fix_allowance');
 
-        // Tambahkan event listener untuk memanggil fungsi formatNominal saat nilai input berubah
         baseSalariesInput.addEventListener('input', function() {
             formatNominal(this);
         });
 
         fixAllowanceInput.addEventListener('input', function() {
             formatNominal(this);
+        });
+
+        document.getElementById('employeeForm').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+            }
         });
     </script>
 @endsection

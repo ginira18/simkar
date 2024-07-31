@@ -27,7 +27,7 @@
                             <div class=" col-md-6 col-xl report-inner-card">
                                 <div class="inner-card-text">
                                     <span class="report-title">Total Gaji Bulan
-                                        {{ \Carbon\Carbon::now()->translatedFormat('F Y') }}</span>
+                                        {{ \Carbon\Carbon::now()->subMonth()->translatedFormat('F Y') }}</span>
                                     <h4>Rp. {{ number_format($lastMonthTotalSalary, 0, ',', '.') }}</h4>
                                 </div>
                                 <div class="inner-card-icon bg-success">
@@ -36,20 +36,29 @@
                             </div>
                             <div class="col-md-6 col-xl report-inner-card">
                                 <div class="inner-card-text">
-                                    <span class="report-title">Permintaan Izin Karyawan</span>
+                                    <span class="report-title">Permintaan Izin Karyawan Pending</span>
                                     <h4>{{ $totalPermissionRequests }}</h4>
                                 </div>
-                                <div class="inner-card-icon bg-warning">
-                                    <i class="icon-globe-alt"></i>
+                                <div class="inner-card-icon bg-danger">
+                                    <i class="icon-bell"></i>
                                 </div>
                             </div>
                             <div class="col-md-6 col-xl report-inner-card">
                                 <div class="inner-card-text">
                                     <span class="report-title">Karyawan Bulanan</span>
-                                    <h4>{{ $totalEmployees }}</h4>
+                                    <h4>{{ $monthlyEmployees }}</h4>
                                 </div>
-                                <div class="inner-card-icon bg-danger">
-                                    <i class="icon-briefcase"></i>
+                                <div class="inner-card-icon bg-primary">
+                                    <i class="icon-people"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xl report-inner-card">
+                                <div class="inner-card-text">
+                                    <span class="report-title">Karyawan Harian</span>
+                                    <h4>{{ $dailyEmployees }}</h4>
+                                </div>
+                                <div class="inner-card-icon bg-warning">
+                                    <i class="icon-people"></i>
                                 </div>
                             </div>
                         </div>

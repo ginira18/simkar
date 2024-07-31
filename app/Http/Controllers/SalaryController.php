@@ -8,6 +8,7 @@ use App\Models\Salary;
 use App\Models\Employee;
 use App\Models\Attendance;
 use App\Models\SalaryHistory;
+use Illuminate\Support\Facades\Http;
 
 class SalaryController extends Controller
 {
@@ -50,6 +51,20 @@ class SalaryController extends Controller
         //
     }
 
+    private function fetchHolidays($params = [])
+    {
+        try {
+            $response = Http::get("https://dayoffapi.vercel.app/api", $params);
+
+            $holidays = $response->json();
+
+            return $holidays;
+        } catch (\Exception $e) {
+            // Log::error('Failed to fetch holidays', ['message' => $e->getMessage()]);
+            throw new \Exception('Failed to fetch holidays');
+        }
+    }
+
     /**
      * Display the specified resource.
      */
@@ -57,11 +72,11 @@ class SalaryController extends Controller
     {
         $employee = Employee::with('department', 'salary')->findOrFail($id);
 
-        // Set tanggal mulai dan akhir
+        // Tanggal mulai dan akhir
         $startDate = Carbon::now()->day(25)->startOfDay();
         $endDate = Carbon::now()->addMonth()->day(25)->startOfDay();
 
-        // Jika bulan ini belum tanggal 25, set tanggal mulai ke 25 bulan sebelumnya dan tanggal akhir ke 25 bulan ini
+        // Atur tanggal mulai ke 25 bulan sebelumnya dan tanggal akhir ke 25 bulan ini
         if (Carbon::now()->day < 25) {
             $startDate = Carbon::now()->subMonth()->day(25)->startOfDay();
             $endDate = Carbon::now()->day(25)->startOfDay();
@@ -76,6 +91,34 @@ class SalaryController extends Controller
             }
             $currentDate->addDay();
         }
+
+        // Hitung jumlah libur 
+        $holidays = 0;
+        $holidays_start = $this->fetchHolidays([
+            'month' => $startDate->month,
+        ]);
+        $holidays_end = $this->fetchHolidays([
+            'month' => $endDate->month,
+        ]);
+
+
+        foreach ($holidays_start as $holiday) {
+            if (!Carbon::parse($holiday['tanggal'])->isSunday() && Carbon::parse($holiday['tanggal'])->gte($startDate) && $holiday["is_cuti"]) {
+                $holidays++;
+            }
+        }
+
+        foreach ($holidays_end as $holiday) {
+            if (!Carbon::parse($holiday['tanggal'])->isSunday() && Carbon::parse($holiday['tanggal'])->lte($endDate) && $holiday["is_cuti"]) {
+                $holidays++;
+            }
+        }
+
+        $jumlahHariKerja -= $holidays;
+
+        // dd($holidays);
+
+        // dd($endDate);
         // Hitung jumlah kehadiran dan izin
         $hadir = Attendance::where('employee_id', $id)
             ->whereBetween('date', [$startDate, $endDate])
@@ -95,6 +138,7 @@ class SalaryController extends Controller
             ->whereBetween('date', [$startDate, $endDate])
             ->where('keterangan', 'terlambat')
             ->count();
+
 
         // Hitung potongan Kehadiran
         $potonganKehadiran = $terlambat * 10000;

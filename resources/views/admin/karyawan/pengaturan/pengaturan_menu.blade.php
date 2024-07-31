@@ -29,6 +29,12 @@
                 {{ session('status_success') }}
             </div>
         @endif
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+        
         <div class="row">
             <div class="col-md-6">
                 <div class="card rounded">
@@ -103,11 +109,17 @@
                                                 @csrf
                                                 <button type="submit" class="btn btn-dark btn-sm">Aktif</button>
                                             </form>
-                                            <form class="d-inline" action="{{ route('pengaturan-karyawan.destroy', $department->id) }}"
+                                            {{-- <form class="d-inline" action="{{ route('pengaturan-karyawan.destroy', $department->id) }}"
                                                 method="POST">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                            </form> --}}
+
+                                            <form class="d-inline" action="{{ route('pengaturan-karyawan.destroyDepartment', $department->id) }}" method="POST">
+                                                @method('DELETE')
+                                                @csrf
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus bagian ini?')">Hapus</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -138,7 +150,7 @@
                             <label>
                                 <h5>Nama Bagian</h5>
                             </label>
-                            <input type="text" class="form-control" id="name" name="name">
+                            <input type="text" class="form-control" id="name" name="name" autofocus>
                         </div>
                         <div>
                             <button type="subnit" class="btn btn-primary mt-2">Tambah Bagian</button>
