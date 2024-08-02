@@ -77,7 +77,7 @@
                                 <h2 class="text-center mb-0 font-weight-bold">{{ $totalEmployees }}</h2>
                                 <small class="d-block text-center text-muted  font-weight-semibold mb-0">Total
                                     Karyawan</small>
-                            </div>
+                            </div> 
                         </div>
                         <div class="wrapper mt-4 d-flex flex-wrap align-items-center">
                             <div class="d-flex">

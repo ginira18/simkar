@@ -93,11 +93,30 @@ class ReportController extends Controller
 
 
     // Karyawan
-    public function laporan_karyawan()
+    public function laporan_karyawan(Request $request)
     {
         $employeeId = Auth::id();
-        $reports = Report::where('employee_id', $employeeId)->get();
-        return view('pegawai.laporan', compact('reports'));
+
+        $date = $request->input('date');
+        $title = $request->input('title');
+
+        $query = Report::where('employee_id', $employeeId);
+
+        if ($date) {
+            $query->whereDate('date', $date);
+        }
+
+        if ($title) {
+            $query->where('title', 'like', "%{$title}%");
+        }
+
+        $reports = $query->paginate(30);
+
+        return view('pegawai.laporan', [
+            'reports' => $reports,
+            'selectedDate' => $date,
+            'selectedTitle' => $title,
+        ]);
     }
 
     public function create_karyawan_report()
@@ -132,7 +151,7 @@ class ReportController extends Controller
 
     public function show_karyawan_report($id)
     {
-        $report = Report::findOrFail($id); 
+        $report = Report::findOrFail($id);
 
         return view('pegawai.detail_laporan', compact('report'));
     }

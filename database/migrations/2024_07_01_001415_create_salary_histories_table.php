@@ -21,6 +21,15 @@ return new class extends Migration
             $table->integer('bonus')->nullable();
             $table->integer('cut_other')->nullable();
             $table->integer('total_salary');
+            $table->string('department');
+            $table->string('position');
+            $table->string('bpjs');
+            $table->integer('jumlahHariKerja');
+            $table->integer('hadir');
+            $table->integer('izin');
+            $table->integer('alpha');
+            $table->integer('terlambat');
+            
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');

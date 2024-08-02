@@ -7,7 +7,7 @@
         use Carbon\Carbon;
     @endphp
 
-    <div class="col-sm-9 grid-margin card rounded">
+    <div class="col-sm-12 grid-margin card rounded">
         <div class="card">
             <div class="card-body">
                 <div class="page-header">
@@ -25,6 +25,11 @@
                                 <th>NIP</th>
                                 <th>Bagian</th>
                                 <th>Jabatan</th>
+                                <th>Asuransi</th>
+                                <th>Hadir</th>
+                                <th>Alpha</th>
+                                <th>Izin</th>
+
                                 <th>Total Gaji Diterima</th>
                             </tr>
                         </thead>
@@ -36,6 +41,10 @@
                                     <td>{{ $salaryHistory->employee->NIP }}</td>
                                     <td>{{ $salaryHistory->employee->department->name }}</td>
                                     <td>{{ $salaryHistory->employee->position }}</td>
+                                    <td>{{ $salaryHistory->employee->bpjs == 'bpjs' ? 'BPJS' : 'Tidak ada' }}</td>
+                                    <td>{{ $salaryHistory->hadir }}</td>
+                                    <td>{{ $salaryHistory->alpha }}</td>
+                                    <td>{{ $salaryHistory->izin }}</td>
                                     <td>Rp. {{ number_format($salaryHistory->total_salary, 0, ',', '.') }}</td>
                                 </tr>
                             @endforeach

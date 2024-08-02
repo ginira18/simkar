@@ -1,6 +1,6 @@
-@extends('pegawai.template')
+@extends('admin.layout.template')
 
-@section('title', 'Detail Gaji Karyawan')
+@section('title', 'Detail Riwayat Gaji')
 @section('content')
 
     <div class="col-sm-12 grid-margin card rounded">
@@ -19,14 +19,6 @@
                         {{ session('error') }}
                     </div>
                 @endif
-
-                <div class="row mb-4">
-                    <div class="col-md-12">
-                        <p><strong>Bulan:</strong>
-                            {{ \Carbon\Carbon::parse($salaryHistory->created_at)->locale('id')->translatedFormat('F') }}</p>
-                        <p><strong>Tahun:</strong> {{ \Carbon\Carbon::parse($salaryHistory->created_at)->format('Y') }}</p>
-                    </div>
-                </div>
 
                 <div class="row">
                     <div class="col-md-6">
@@ -53,25 +45,18 @@
                                 <p class="py-3">: {{ $salaryHistory->employee->position }}</p>
                                 <p class="py-3">:
                                     {{ $salaryHistory->employee->employee_type == 'monthly' ? 'Bulanan' : 'Harian' }}</p>
-                                <p class="py-3">: Rp.<span
+                                <p class="py-3">: Rp. <span
                                         id="base_salary">{{ number_format($salaryHistory->base_salary, 0, ',', '.') }}</span>
                                 </p>
-                                <p class="py-3">: Rp.<span
-                                        id="fix_allowance">{{ number_format($salaryHistory->fix_allowance, 0, ',', '.') }}</span>
+                                <p class="py-3">: Rp. <span id="fix_allowance">{{ number_format($salaryHistory->fix_allowance, 0, ',', '.') }}</span>
                                 </p>
-                                <p class="py-3">
-                                    @if ($salaryHistory->employee->bpjs == 'bpjs')
-                                        : BPJS
-                                    @else
-                                        : Tidak ada
-                                    @endif
+                                <p class="py-3">: {{ $salaryHistory->employee->bpjs == 'bpjs' ? 'BPJS' : 'Tidak ada' }}
                                 </p>
-
                                 <p class="py-3">: {{ $salaryHistory->jumlahHariKerja }}</p>
                                 <p class="py-3">: {{ $salaryHistory->hadir }}</p>
                                 <p class="py-3">: {{ $salaryHistory->alpha }}</p>
                                 <p class="py-3">: {{ $salaryHistory->izin }}</p>
-                                <p class="py-3">: {{ $salaryHistory->terlambat }}</p>  
+                                <p class="py-3">: {{ $salaryHistory->terlambat }}</p>
                             </div>
                         </div>
                     </div>
@@ -137,8 +122,8 @@
                             </div>
                         </div>
                         <div class="col-md-12 mt-4">
-                            <a href="{{ route('gaji-karyawan') }}" class="btn btn-secondary">Kembali</a>
-                            <a href="{{ route('gaji.slip', $salaryHistory->id) }}" class="btn btn-primary">Lihat Slip
+                            <a href="{{ route ('dashboard-riwayat_gaji')}}" class="btn btn-secondary">Kembali</a>
+                            <a href="{{ route('history_salary.slip', $salaryHistory->id) }}" class="btn btn-primary">Lihat Slip
                                 Gaji</a>
                         </div>
                     </div>

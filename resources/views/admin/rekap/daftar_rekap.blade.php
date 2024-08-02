@@ -23,7 +23,7 @@
                         @foreach ($salaryHistories as $index => $salaryHistory)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ Carbon::parse($salaryHistory->month)->format('F Y') }}</td>
+                                <td>{{ Carbon::parse($salaryHistory->month)->locale('id')->translatedFormat('F Y') }}</td>
                                 <td>Rp. {{ number_format($salaryHistory->total, 0, ',', '.') }}</td>
                                 <td>
                                     <a href="{{ route('detail-rekap', $salaryHistory->month) }}" class="btn btn-primary btn-sm">

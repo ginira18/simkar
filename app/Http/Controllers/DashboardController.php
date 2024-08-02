@@ -41,8 +41,13 @@ class DashboardController extends Controller
         $maleEmployees = Employee::where('gender', 'male')->count();
         $femaleEmployees = Employee::where('gender', 'female')->count();
 
-        $monthlyEmployees = Employee::where('employee_type', 'monthly')->count();
-        $dailyEmployees = Employee::where('employee_type', 'daily')->count();
+        $monthlyEmployees = Employee::where('employee_type', 'monthly')
+            ->where('is_active', true)
+            ->count();
+
+        $dailyEmployees = Employee::where('employee_type', 'daily')
+            ->where('is_active', true)
+            ->count();
         $totalEmployees = Employee::where('is_active', true)->count();
         $totalPermissionRequests = Permission::where('status', 'pending')->count();
         $activeDepartments = Department::withCount('employees')->get();
@@ -69,141 +74,60 @@ class DashboardController extends Controller
 
     public function index_karyawan()
     {
-        // Mendapatkan ID karyawan yang sedang login
-        $employeeId = Auth::id();
+        $user = auth()->user();
 
-        // Mendapatkan informasi karyawan
-        $employee = Employee::with('salary')->findOrFail($employeeId);
+        $today = now()->toDateString();
 
-        // Set tanggal mulai dan akhir
-        $startDate = Carbon::now()->day(25)->startOfDay();
-        $endDate = Carbon::now()->addMonth()->day(25)->startOfDay();
+        // Data Kehadiran hari ini
+        $kehadiranHariIni = Attendance::where('employee_id', $user->id)
+            ->whereDate('date', $today)
+            ->first();
 
-        // Jika bulan ini belum tanggal 25, set tanggal mulai ke 25 bulan sebelumnya dan tanggal akhir ke 25 bulan ini
-        if (Carbon::now()->day < 25) {
-            $startDate = Carbon::now()->subMonth()->day(25)->startOfDay();
-            $endDate = Carbon::now()->day(25)->startOfDay();
-        }
 
-        // Hitung jumlah hari kerja
-        $jumlahHariKerja = 0;
-        $currentDate = $startDate->copy();
-        while ($currentDate->lte($endDate)) {
-            if (!$currentDate->isSunday()) {
-                $jumlahHariKerja++;
-            }
-            $currentDate->addDay();
-        }
+        $latestSalary = SalaryHistory::where('employee_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
 
-        // Hitung jumlah kehadiran, izin, dan alpha
-        $hadir = Attendance::where('employee_id', $employeeId)
-            ->whereBetween('date', [$startDate, $endDate])
-            ->where('status', 'hadir')
-            ->count();
-        $izin = Attendance::where('employee_id', $employeeId)
-            ->whereBetween('date', [$startDate, $endDate])
-            ->where('status', 'izin')
-            ->count();
-        $alpha = $jumlahHariKerja - $hadir - $izin;
+        $totalGaji = $latestSalary ? $latestSalary->total_salary : 0;
+        $lastSalaryMonth = $latestSalary ? Carbon::parse($latestSalary->created_at)->translatedFormat('F Y') : '';
 
-        // Hitung jumlah terlambat
-        $terlambat = Attendance::where('employee_id', $employeeId)
-            ->whereBetween('date', [$startDate, $endDate])
-            ->where('keterangan', 'terlambat')
+        // Jumlah izin pending bulan ini
+        $izinPending = Permission::where('employee_id', $user->id)
+            ->where('status', 'pending')
             ->count();
 
-        // Hitung potongan Kehadiran
-        $potonganKehadiran = $terlambat * 10000;
-        $potonganKehadiran += $alpha > 0 ? 50000 : 0;
+        // Data untuk chart kehadiran
+        $latestSalaryHistory = SalaryHistory::where('employee_id', $user->id)
+            ->latest('created_at')
+            ->first();
 
-        // Hitung potongan asuransi
-        $potonganAsuransi = $employee->bpjs == 'bpjs' ? ($employee->salary->base_salary + $employee->salary->fix_allowance) * 0.01 : 0;
-
-        // Hitung total gaji untuk karyawan bulanan
-        $totalGaji = 0;
-        if ($employee->employee_type == 'monthly') {
-            $totalGaji = $employee->salary->base_salary + $employee->salary->fix_allowance - $potonganKehadiran - $potonganAsuransi;
-        } elseif ($employee->employee_type == 'daily') {
-            $totalGaji = $employee->salary->base_salary * $hadir - $potonganKehadiran - $potonganAsuransi;
+        if (!$latestSalaryHistory) {
+            $hadir = $izin = $alpha = 0;
+        } else {
+            $hadir = $latestSalaryHistory->hadir;
+            $izin = $latestSalaryHistory->izin;
+            $alpha = $latestSalaryHistory->alpha;
         }
 
-        // Data untuk chart gaji per bulan (asumsi Anda ingin menampilkan data untuk 6 bulan terakhir)
-        $labels = [];
-        $totalSalaries = [];
+        // Data untuk chart total gaji per bulan (6 bulan terakhir)
+        $labels = collect();
+        $totalSalaries = collect();
+
         for ($i = 5; $i >= 0; $i--) {
-            $date = Carbon::now()->subMonths($i);
-            $labels[] = $date->translatedFormat('F Y');
-            $monthlySalary = $this->calculateMonthlySalary($employeeId, $date);
-            $totalSalaries[] = $monthlySalary;
+            $date = now()->subMonths($i);
+            $labels->push($date->translatedFormat('F Y'));
+            $totalSalaries->push(
+                SalaryHistory::where('employee_id', $user->id)
+                    ->whereYear('created_at', $date->year)
+                    ->whereMonth('created_at', $date->month)
+                    ->sum('total_salary')
+            );
         }
 
-        return view('pegawai.dashboard', compact(
-            'employee', 'hadir', 'izin', 'alpha', 'terlambat',
-            'totalGaji', 'labels', 'totalSalaries'
-        ));
+        return view('pegawai.dashboard', compact('kehadiranHariIni', 'lastSalaryMonth', 'totalGaji', 'izinPending', 'hadir', 'alpha', 'izin', 'labels', 'totalSalaries'));
     }
 
-    private function calculateMonthlySalary($employeeId, $date)
-    {
-        // Set tanggal mulai dan akhir untuk bulan yang diberikan
-        $startDate = $date->copy()->day(25)->startOfDay();
-        $endDate = $date->copy()->addMonth()->day(25)->startOfDay();
 
-        // Jika bulan ini belum tanggal 25, set tanggal mulai ke 25 bulan sebelumnya dan tanggal akhir ke 25 bulan ini
-        if ($date->day < 25) {
-            $startDate = $date->copy()->subMonth()->day(25)->startOfDay();
-            $endDate = $date->copy()->day(25)->startOfDay();
-        }
-
-        // Hitung jumlah kehadiran, izin, dan alpha
-        $hadir = Attendance::where('employee_id', $employeeId)
-            ->whereBetween('date', [$startDate, $endDate])
-            ->where('status', 'hadir')
-            ->count();
-        $izin = Attendance::where('employee_id', $employeeId)
-            ->whereBetween('date', [$startDate, $endDate])
-            ->where('status', 'izin')
-            ->count();
-        $alpha = $this->calculateWorkDays($startDate, $endDate) - $hadir - $izin;
-
-        // Hitung jumlah terlambat
-        $terlambat = Attendance::where('employee_id', $employeeId)
-            ->whereBetween('date', [$startDate, $endDate])
-            ->where('keterangan', 'terlambat')
-            ->count();
-
-        // Hitung potongan Kehadiran
-        $potonganKehadiran = $terlambat * 10000;
-        $potonganKehadiran += $alpha > 0 ? 50000 : 0;
-
-        $employee = Employee::with('salary')->findOrFail($employeeId);
-
-        // Hitung potongan asuransi
-        $potonganAsuransi = $employee->bpjs == 'bpjs' ? ($employee->salary->base_salary + $employee->salary->fix_allowance) * 0.01 : 0;
-
-        // Hitung total gaji untuk karyawan bulanan
-        $totalGaji = 0;
-        if ($employee->employee_type == 'monthly') {
-            $totalGaji = $employee->salary->base_salary + $employee->salary->fix_allowance - $potonganKehadiran - $potonganAsuransi;
-        } elseif ($employee->employee_type == 'daily') {
-            $totalGaji = $employee->salary->base_salary * $hadir - $potonganKehadiran - $potonganAsuransi;
-        }
-
-        return $totalGaji;
-    }
-
-    private function calculateWorkDays($startDate, $endDate)
-    {
-        $jumlahHariKerja = 0;
-        $currentDate = $startDate->copy();
-        while ($currentDate->lte($endDate)) {
-            if (!$currentDate->isSunday()) {
-                $jumlahHariKerja++;
-            }
-            $currentDate->addDay();
-        }
-        return $jumlahHariKerja;
-    }
 
     /**
      * Show the form for creating a new resource.

@@ -101,13 +101,13 @@
                     </tr>
                     <tr>
                         <td>Bagian</td>
-                        <td>: {{ $salaryHistory->employee->department->name }}</td>
+                        <td>: {{ $salaryHistory->department }}</td>
                         <td>Jabatan</td>
-                        <td>: {{ $salaryHistory->employee->position }}</td>
+                        <td>: {{ $salaryHistory->position }}</td>
                     </tr>
                     <tr>
                         <td>Bulan</td>
-                        <td>: {{ \Carbon\Carbon::parse($salaryHistory->periode)->format('F Y') }}</td>
+                        <td>: {{ \Carbon\Carbon::parse($salaryHistory->periode)->locale('id')->translatedFormat('F Y') }}</td>
                     </tr>
                 </table>
 
@@ -139,16 +139,17 @@
                             <td style="border: 1px solid black;">Bonus</td>
                             <td style="border: 1px solid black;">Rp.
                                 {{ number_format($salaryHistory->bonus, 0, ',', '.') }}</td>
-                            <td style="border: 1px solid black;"></td>
-                            <td style="border: 1px solid black;"></td>
+                            <td style="border: 1px solid black;">Potongan Lainnya</td>
+                            <td style="border: 1px solid black;">Rp.
+                            {{ number_format($salaryHistory->cut_other, 0, ',', '.') }}</td>
                         </tr>
                         <tr>
                             <td style="border: 1px solid black;"><b>Total Penghasilan</b></td>
                             <td style="border: 1px solid black;">Rp.
-                                {{ number_format($salaryHistory->total_income, 0, ',', '.') }}</td>
+                                {{ number_format($salaryHistory->base_salary + $salaryHistory->fix_allowance + $salaryHistory->bonus , 0, ',', '.') }}</td>
                             <td style="border: 1px solid black;"><b>Total Potongan</b></td>
                             <td style="border: 1px solid black;">Rp.
-                                {{ number_format($salaryHistory->total_deduction, 0, ',', '.') }}</td>
+                                {{ number_format($salaryHistory->cut_insurance + $salaryHistory->cut_attendance + $salaryHistory->cut_other, 0, ',', '.') }}</td>
                         </tr>
                         <tr>
                             <td style="border: 1px solid black;background-color: lightgray;"><b>Total Gaji Diterima</b>

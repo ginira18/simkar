@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Salary;
 use App\Models\Employee;
 use App\Models\Attendance;
+use App\Models\Department;
 use App\Models\SalaryHistory;
 use Illuminate\Support\Facades\Http;
 
@@ -15,40 +16,60 @@ class SalaryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    private function hasSalaryBeenGivenThisMonth(Employee $employee)
     {
-        $employees = Employee::with(['department', 'salary'])->get();
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
 
-        return view('admin.gaji.daftar_gaji')->with('employees', $employees);
-    }
-    // public function salaryHistory()
-    // {
-    //     $employees = Employee::with(['department', 'salaryHistories'])->get();
-
-    //     return view('admin.gaji.riwayat_gaji')->with('employees', $employees);
-    // }
-    public function salaryHistory()
-    {
-        $salaryHistories = SalaryHistory::with(['employee'])
-            ->get();
-
-        return view('admin.gaji.riwayat_gaji')->with('salaryHistories', $salaryHistories);
+        return SalaryHistory::where('employee_id', $employee->id)
+            ->whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->exists();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function index(Request $request)
     {
-        //
-    }
+        $search = $request->input('search');
+        $employeeType = $request->input('employee_type');
+        $salaryStatus = $request->input('salary_status');
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        $query = Employee::with(['department', 'salary']);
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('NIP', 'like', "%{$search}%")
+                    ->orWhereHas('department', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if ($employeeType) {
+            $query->where('employee_type', $employeeType);
+        }
+
+        $employees = $query->get()->map(function ($employee) {
+            $employee->has_salary_been_given = $this->hasSalaryBeenGivenThisMonth($employee);
+            return $employee;
+        });
+
+        if ($salaryStatus === 'given') {
+            $employees = $employees->filter(function ($employee) {
+                return $employee->has_salary_been_given;
+            });
+        } elseif ($salaryStatus === 'not_given') {
+            $employees = $employees->filter(function ($employee) {
+                return !$employee->has_salary_been_given;
+            });
+        }
+
+        return view('admin.gaji.daftar_gaji', [
+            'employees' => $employees,
+            'search' => $search,
+            'employeeType' => $employeeType,
+            'salaryStatus' => $salaryStatus,
+        ]);
     }
 
     private function fetchHolidays($params = [])
@@ -118,7 +139,6 @@ class SalaryController extends Controller
 
         // dd($holidays);
 
-        // dd($endDate);
         // Hitung jumlah kehadiran dan izin
         $hadir = Attendance::where('employee_id', $id)
             ->whereBetween('date', [$startDate, $endDate])
@@ -128,6 +148,7 @@ class SalaryController extends Controller
             ->whereBetween('date', [$startDate, $endDate])
             ->where('status', 'izin')
             ->count();
+        // dd($jumlahHariKerja);
 
         // Hitung jumlah alpha
         $alpha = $jumlahHariKerja - $hadir - $izin;
@@ -141,8 +162,8 @@ class SalaryController extends Controller
 
 
         // Hitung potongan Kehadiran
-        $potonganKehadiran = $terlambat * 10000;
-        $potonganKehadiran += $alpha * 50000;
+        $potonganTerlambat = $terlambat * 10000;
+        $potonganKehadiran = $alpha * 50000;
 
         // Hitung potongan asuransi
         $potonganAsuransi = $employee->bpjs == 'bpjs' ? ($employee->salary->base_salary + $employee->salary->fix_allowance) * 0.01 : 0;
@@ -150,18 +171,43 @@ class SalaryController extends Controller
         // Hitung total gaji untuk karyawan bulanan
         $totalGaji = 0;
         if ($employee->employee_type == 'monthly') {
-            $totalGaji = $employee->salary->base_salary + $employee->salary->fix_allowance - $potonganKehadiran - $potonganAsuransi;
+            $totalGaji = $employee->salary->base_salary + $employee->salary->fix_allowance - $potonganTerlambat - $potonganKehadiran - $potonganAsuransi;
         } elseif ($employee->employee_type == 'daily') {
-            $totalGaji = $employee->salary->base_salary * $hadir - $potonganKehadiran - $potonganAsuransi;
+            $totalGaji = ($employee->salary->base_salary * $hadir) - $potonganTerlambat;
         }
-
-        return view('admin.gaji.gaji_detail', compact('employee', 'izin', 'terlambat', 'alpha', 'potonganKehadiran', 'potonganAsuransi', 'totalGaji', 'jumlahHariKerja'));
+        session([
+            'attendance_data' => [
+                'jumlahHariKerja' => $jumlahHariKerja,
+                'hadir' => $hadir,
+                'izin' => $izin,
+                'alpha' => $alpha,
+                'terlambat' => $terlambat,
+            ],
+            'employee_data' => [
+                'id' => $employee->id,
+                'department' => $employee->department->name,
+                'position' => $employee->position,
+                'bpjs' => $employee->bpjs,
+                'base_salary' => $employee->salary->base_salary,
+                'fix_allowance' => $employee->salary->fix_allowance
+            ]
+        ]);
+        return view('admin.gaji.gaji_detail', compact('employee', 'jumlahHariKerja', 'hadir', 'izin', 'terlambat', 'alpha', 'potonganTerlambat', 'potonganKehadiran', 'potonganAsuransi', 'totalGaji', 'jumlahHariKerja'));
     }
 
 
     public function giveSalary(Request $request, $id)
     {
-        // dd($request->all());
+        $currentDate = Carbon::now();
+        if ($currentDate->day < 1 || $currentDate->day > 9) {
+            return redirect()->back()->with('error', 'Penggajian hanya bisa dilakukan pada tanggal 25 sampai 28.');
+        }
+
+        $employee = Employee::with('salary')->findOrFail($id);
+        if ($this->hasSalaryBeenGivenThisMonth($employee)) {
+            return redirect()->back()->with('error', 'Gaji sudah diberikan untuk bulan ini.');
+        }
+
         $validatedData = $request->validate([
             'cut_insurance' => 'required|numeric',
             'cut_attendance' => 'required|numeric',
@@ -170,7 +216,8 @@ class SalaryController extends Controller
             'total_salary' => 'required|numeric',
         ]);
 
-        $employee = Employee::with('salary')->findOrFail($id);
+        $employeeData = session('employee_data');
+        $attendanceData = session('attendance_data');
 
         $salaryHistory = new SalaryHistory();
         $salaryHistory->employee_id = $id;
@@ -181,58 +228,113 @@ class SalaryController extends Controller
         $salaryHistory->bonus = $validatedData['bonus'] ?? 0;
         $salaryHistory->cut_other = $validatedData['cut_other'] ?? 0;
         $salaryHistory->total_salary = $validatedData['total_salary'];
+        $salaryHistory->department = $employeeData['department'];
+        $salaryHistory->position = $employeeData['position'];
+        $salaryHistory->bpjs = $employeeData['bpjs'];
+        $salaryHistory->jumlahHariKerja = $attendanceData['jumlahHariKerja'];
+        $salaryHistory->hadir = $attendanceData['hadir'];
+        $salaryHistory->izin = $attendanceData['izin'];
+        $salaryHistory->alpha = $attendanceData['alpha'];
+        $salaryHistory->terlambat = $attendanceData['terlambat'];
         $salaryHistory->save();
 
         // $employee->salary->status = 'diberikan';
-        $employee->salary->save();
+        // $employee->salary->save();
 
         return redirect()->route('dashboard-gaji.index', $id)->with('success', 'Gaji berhasil diberikan dan disimpan ke dalam riwayat.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Salary $salary)
+
+    public function salaryHistory(Request $request)
     {
-        //
+        $query = SalaryHistory::with('employee.department');
+
+        $search = $request->input('search');
+        $month = $request->input('month');
+        $year = $request->input('year');
+
+        if ($search) {
+            $query->whereHas('employee', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('NIP', 'like', '%' . $search . '%');
+            })
+                ->orWhereHas('employee.department', function ($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%');
+                });
+        }
+
+        if ($month && $year) {
+            $startDate = Carbon::create($year, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        } elseif ($year) {
+            $startDate = Carbon::create($year, 1, 1)->startOfYear();
+            $endDate = $startDate->copy()->endOfYear();
+
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        } elseif ($month) {
+            $startDate = Carbon::create(now()->year, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+
+        $salaryHistories = $query->paginate(30);
+
+        return view('admin.gaji.riwayat_gaji', compact('salaryHistories'));
+    }
+    public function history_salary_detail($id)
+    {
+
+        $salaryHistory = SalaryHistory::with('employee.department')->findOrFail($id);
+
+        return view('admin.gaji.riwayat_gaji_detail', compact('salaryHistory'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Salary $salary)
+    public function hisoty_salary_slip($id)
     {
-        //
+        $salaryHistory = SalaryHistory::findOrFail($id);
+
+        return view('slip_gaji', compact('salaryHistory'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Salary $salary)
-    {
-        //
-    }
 
     // Karyawan
-    public function index_karyawan()
+    public function index_karyawan(Request $request)
     {
         $employee = auth()->user();
-        $salaryHistories = SalaryHistory::where('employee_id', $employee->id)->with('employee.department')->get();
 
-        return view('pegawai.gaji')->with('salaryHistories', $salaryHistories);
+        $month = $request->input('month');
+        $year = $request->input('year');
+
+        $query = SalaryHistory::where('employee_id', $employee->id)->with('employee.department');
+
+        if ($month && $year) {
+            $query->whereYear('created_at', $year)
+                ->whereMonth('created_at', $month);
+        } elseif ($year) {
+            $query->whereYear('created_at', $year);
+        } elseif ($month) {
+            $query->whereMonth('created_at', $month);
+        }
+
+        $salaryHistories = $query->paginate(30);
+
+        return view('pegawai.gaji', [
+            'salaryHistories' => $salaryHistories,
+            'selectedMonth' => $month,
+            'selectedYear' => $year,
+        ]);
     }
 
     public function show_karyawan($id)
     {
         $salaryHistory = SalaryHistory::with('employee.department')->findOrFail($id);
 
-        // Hitung jumlah kehadiran dengan status masing-masing
-        $employeeId = $salaryHistory->employee_id;
-        $izin = Attendance::where('employee_id', $employeeId)->where('status', 'izin')->count();
-        $alpha = Attendance::where('employee_id', $employeeId)->where('status', 'alpha')->count();
-        $terlambat = Attendance::where('employee_id', $employeeId)->where('keterangan', 'terlambat')->count();
 
-        return view('pegawai.detail_gaji', compact('salaryHistory', 'izin', 'alpha', 'terlambat'));
+        return view('pegawai.detail_gaji', compact('salaryHistory'));
     }
 
     public function slip($id)

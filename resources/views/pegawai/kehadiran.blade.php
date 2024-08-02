@@ -7,8 +7,36 @@
         <div class="card-body">
             <div class="page-header">
                 <h4 class="card-title">Data Kehadiran</h4>
-                {{-- <a class="btn btn-warning mt-5 mr-4" href='{{ route ('izin-karyawan')}}'>Ajukan Izin</a> --}}
             </div>
+            <form method="GET" action="{{ route('kehadiran-karyawan') }}">
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label for="month">Bulan</label>
+                        <select id="month" name="month" class="form-control">
+                            @for ($i = 1; $i <= 12; $i++)
+                                <option value="{{ $i }}"
+                                    {{ $i == request('month', now()->month) ? 'selected' : '' }}>
+                                    {{ \Carbon\Carbon::create()->month($i)->locale('id')->translatedFormat('F') }}
+                                </option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="year">Tahun</label>
+                        <select id="year" name="year" class="form-control">
+                            @for ($i = now()->year - 5; $i <= now()->year; $i++)
+                                <option value="{{ $i }}"
+                                    {{ $i == request('year', now()->year) ? 'selected' : '' }}>
+                                    {{ $i }}
+                                </option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </div>
+                </div>
+            </form>
             <form>
                 <div class="form-group col-md-5 pl-0 mt-4">
                 </div>
@@ -38,22 +66,22 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if($attendance->check_in)
+                                    @if ($attendance->check_in)
                                         {{ $attendance->check_in }}
                                     @elseif($attendance->status == 'alpha')
                                         <label>-</label>
                                     @elseif($attendance->status == 'izin')
                                         <label>-</label>
-                                        @endif
+                                    @endif
                                 </td>
                                 <td>
-                                    @if($attendance->check_out)
+                                    @if ($attendance->check_out)
                                         {{ $attendance->check_out }}
                                     @elseif($attendance->status == 'alpha')
                                         <label>-</label>
                                     @elseif($attendance->status == 'izin')
                                         <label>-</label>
-                                        @endif
+                                    @endif
                                 </td>
                                 <td>
                                     @if ($attendance->keterangan == 'tepat_waktu')
@@ -70,6 +98,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="mt-4 d-flex justify-content-end">
+                    {{ $attendances->links() }}
+                </div>
             </form>
         </div>
     </div>

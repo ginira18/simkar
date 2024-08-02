@@ -5,6 +5,18 @@
     <div class="col-sm-12 grid-margin card rounded">
         <div class="card-body">
             <h4 class="card-title mb-3">Detail Izin</h4>
+
+            @if (session('status_error'))
+                <div class="alert alert-danger" role="alert">
+                    {{ session('status_error') }}
+                </div>
+            @endif
+            @if (session('status_success'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('status_success') }}
+                </div>
+            @endif
+
             <div class="form-group row">
                 <label for="start_date" class="col-sm-3 col-form-label">Tanggal Mulai</label>
                 <div class="col-sm-9">
@@ -30,9 +42,10 @@
                 <label for="evidence" class="col-sm-3 col-form-label">Bukti</label>
                 <div class="col-sm-9">
                     @if ($permission->evidence)
-                        <a href="{{ asset('storage/evidence_izin/' . $permission->evidence) }}" class="btn btn-secondary">Lihat Bukti</a>
+                        <a href="{{ asset('storage/evidence_izin/' . $permission->evidence) }}"
+                            class="btn btn-secondary">Lihat Bukti</a>
                     @else
-                        <label class="badge badge-danger">Tidak ada bukti yang dilampirkan</label >
+                        <label class="badge badge-danger">Tidak ada bukti yang dilampirkan</label>
                     @endif
                 </div>
             </div>
@@ -56,7 +69,10 @@
                     <a href="{{ route('izin-karyawan') }}" class="btn btn-primary">Kembali</a>
                 </div>
                 <div class="col-sm-4">
-                    <a href="{{ route('izin-edit-create', ['id' => $permission->id]) }}" class="btn btn-warning">Edit</a>
+                    <a href="{{ route('izin-edit-create', ['id' => $permission->id]) }}"
+                        class="btn btn-warning {{ $permission->status != 'Pending' ? 'disabled' : '' }}">
+                        Edit
+                    </a>
                 </div>
             </div>
         </div>

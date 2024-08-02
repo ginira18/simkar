@@ -61,6 +61,8 @@
         Route::get('/salary/{id}', [SalaryController::class, 'show'])->name('salary.show');
         Route::post('gaji/{id}/give-salary', [SalaryController::class, 'giveSalary'])->name('gaji.give-salary');
         Route::get('dashboard-riwayat_gaji', [SalaryController::class, 'salaryHistory'])->name('dashboard-riwayat_gaji');
+        Route::get('salary-history/{id}', [SalaryController::class, 'history_salary_detail'])->name('history_salary.show');
+        Route::get('salary-history-slip/{id}', [SalaryController::class, 'hisoty_salary_slip'])->name('history_salary.slip');
 
         // Laporan
         Route::resource('dashboard-laporan', ReportController::class);

@@ -11,9 +11,7 @@ use App\Models\User;
 
 class EmployeeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -69,7 +67,7 @@ class EmployeeController extends Controller
             'base_salary' => 'required',
             'fix_allowance' => 'required',
             'bpjs' => 'required',
-            'rfid_number' => 'unique:employees',
+            'rfid_number' => 'unique:employees |numeric',
             'department_id' => 'required|exists:departments,id',
         ]);
 

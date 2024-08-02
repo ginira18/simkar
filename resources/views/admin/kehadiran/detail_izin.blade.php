@@ -47,11 +47,12 @@
                     <label for="evidence" class="col-sm-3 col-form-label">Bukti</label>
                     <div class="col-sm-9">
                         @if ($permission->evidence)
-                            <a href="{{ asset('storage/evidence_izin/' . $permission->evidence) }}" class="btn btn-secondary">Lihat Bukti</a>
+                            <a href="{{ asset('storage/evidence_izin/' . $permission->evidence) }}"
+                                class="btn btn-secondary">Lihat Bukti</a>
                         @else
-                            <label class="badge badge-danger">Tidak ada bukti yang dilampirkan</label >
+                            <label class="badge badge-danger">Tidak ada bukti yang dilampirkan</label>
                         @endif
-                    </div> 
+                    </div>
                 </div>
                 <div class="form-group row">
                     <label for="status" class="col-sm-3 col-form-label">Status</label>
@@ -67,11 +68,26 @@
                         @endif
                     </div>
                 </div>
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <a href="{{ route('dashboard-izin') }}" class="btn btn-secondary">Kembali</a>
 
-                <div class="btn-group col-md-4 mt-3 p-0" role="group" aria-label="Basic example">
-                    <button  @if($permission->status != "Pending") disabled @endif type="submit" class="btn btn-danger" name="button_approve" value="Rejected">Tolak</button>
-                    <button  @if($permission->status != "Pending") disabled @endif type="submit" class="btn btn-success" name="button_approve" value="Approved">Terima</button>
+                    <div class="justify-content-end btn-group col-md-4 p-0" role="group" aria-label="Basic example">
+                        <button @if ($permission->status != 'Pending') disabled @endif type="submit" class="btn btn-danger"
+                            name="button_approve" value="Rejected">Tolak</button>
+                        <button @if ($permission->status != 'Pending') disabled @endif type="submit" class="btn btn-success"
+                            name="button_approve" value="Approved">Terima</button>
+                    </div>
                 </div>
+                {{-- <div class="position-relative">
+                    <a href="{{ route('dashboard-izin') }}" class="btn btn-secondary">Kembali</a>
+
+                    <div class="justify-content-end btn-group col-md-4 p-0" role="group" aria-label="Basic example">
+                        <button @if ($permission->status != 'Pending') disabled @endif type="submit" class="btn btn-danger"
+                            name="button_approve" value="Rejected">Tolak</button>
+                        <button @if ($permission->status != 'Pending') disabled @endif type="submit" class="btn btn-success"
+                            name="button_approve" value="Approved">Terima</button>
+                    </div>
+                </div> --}}
             </form>
         </div>
     </div>

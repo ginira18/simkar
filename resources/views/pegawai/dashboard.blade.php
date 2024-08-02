@@ -3,21 +3,6 @@
 @section('title', 'Dashboard')
 @section('content')
 
-    <style>
-        .coba {
-            max-height: 345px;
-            min-height: 345px;
-            overflow-y: auto;
-        }
-
-        .sticky-header {
-            position: sticky;
-            top: 0;
-            background: white;
-            z-index: 100;
-        }
-    </style>
-
     <div class="container">
         <div class="row">
             <div class="col-md-12 grid-margin">
@@ -27,16 +12,22 @@
                             <div class="col-md-6 col-xl report-inner-card">
                                 <div class="inner-card-text">
                                     <span class="report-title">Kehadiran hari ini</span>
-                                    <h4></h4>
+                                    <h4>
+                                        @if($kehadiranHariIni)
+                                            {{ ucfirst($kehadiranHariIni->status) }} - {{ ucfirst($kehadiranHariIni->keterangan) }}
+                                        @else
+                                            Tidak Hadir
+                                        @endif
+                                    </h4>
                                 </div>
-                                <div class="inner-card-icon bg-danger">
+                                <div class="inner-card-icon bg-primary">
                                     <i class="icon-check"></i>
                                 </div>
                             </div>
-                            <div class=" col-md-6 col-xl report-inner-card">
+                            <div class="col-md-6 col-xl report-inner-card">
                                 <div class="inner-card-text">
                                     <span class="report-title">Total Gaji Bulan
-                                        {{ \Carbon\Carbon::now()->translatedFormat('F Y') }}</span>
+                                        {{ $lastSalaryMonth }}</span>
                                     <h4>Rp. {{ number_format($totalGaji, 0, ',', '.') }}</h4>
                                 </div>
                                 <div class="inner-card-icon bg-success">
@@ -46,7 +37,7 @@
                             <div class="col-md-6 col-xl report-inner-card">
                                 <div class="inner-card-text">
                                     <span class="report-title">Jumlah izin pending</span>
-                                    <h4></h4>
+                                    <h4>{{ $izinPending }}</h4>
                                 </div>
                                 <div class="inner-card-icon bg-warning">
                                     <i class="icon-clock"></i>
@@ -62,7 +53,7 @@
             <div class="col-md-4 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Kehadiran Bulan </h4>
+                        <h1 class="card-title">Kehadiran Bulan {{ \Carbon\Carbon::now()->translatedFormat('F Y') }} </h1>
                         <div class="aligner-wrapper">
                             <canvas id="attendanceDoughnutChart" height="210"></canvas>
                             <div class="wrapper d-flex flex-column justify-content-center absolute absolute-center">

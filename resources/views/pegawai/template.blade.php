@@ -7,6 +7,41 @@
     <title>@yield('title', 'Simkar')</title>
     @vite(['resources/css/app.css'])
 
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container-scroller {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .navbar {
+            flex-shrink: 0;
+        }
+
+        .page-body-wrapper {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 240px;
+            overflow-y: auto;
+        }
+
+        .main-panel {
+            flex: 1;
+            overflow-y: auto;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -28,7 +63,7 @@
                             <img class="img-xs rounded-circle ml-2"
                                 src="{{ Vite::asset('resources/images/faces/face8.jpg') }}" alt="Profile image">
                             <span class="font-weight-normal">
-                                {{Auth::user()->employee->name }}
+                                {{ Auth::user()->employee->name }}
                             </span></a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                             <div class="dropdown-header text-center">
@@ -58,12 +93,12 @@
         <div class="container-fluid page-body-wrapper">
             <!-- partial:partials/_sidebar.html -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
-                <ul class="nav">
+                <ul class="nav pb-5">
                     <li class="nav-item nav-category">
                         <span class="nav-link">@yield('title', 'Simkar')</span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route ('dashboard-karyawan')}}">
+                        <a class="nav-link" href="{{ route('dashboard-karyawan') }}">
                             <span class="menu-title">Dashboard</span>
                             <i class="icon-screen-desktop menu-icon"></i>
                         </a>
@@ -75,7 +110,7 @@
                             <i class="icon-screen-desktop menu-icon"></i>
                         </a>
                     </li> --}}
-                    
+
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="collapse" href="#karyawan" aria-expanded="false"
                             aria-controls="karyawan">
@@ -84,29 +119,36 @@
                         </a>
                         <div class="collapse" id="karyawan">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link" href="{{ route('kehadiran-karyawan') }}">Data Kehadiran</a>
+                                <li class="nav-item"> <a class="nav-link" href="{{ route('kehadiran-karyawan') }}">Data
+                                        Kehadiran</a>
                                 </li>
-                                <li class="nav-item"> <a class="nav-link"
-                                        href="{{ route ('izin-karyawan')}}">Ajukan Izin</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{ route('izin-karyawan') }}">Ajukan
+                                        Izin</a></li>
                             </ul>
                         </div>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route ('laporan-karyawan')}}">
+                        <a class="nav-link" href="{{ route('laporan-karyawan') }}">
                             <span class="menu-title">Laporan Harian</span>
                             <i class="icon-screen-desktop menu-icon"></i>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route ('gaji-karyawan')}}">
+                        <a class="nav-link" href="{{ route('gaji-karyawan') }}">
                             <span class="menu-title">Gaji</span>
                             <i class="icon-screen-desktop menu-icon"></i>
                         </a>
                     </li>
                 </ul>
-
-                
+                <div class="logout-item pl-4 pr-4 pt-5" style="margin-top: 250px">
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger btn-block">
+                            <i class="icon-power menu-icon"></i> Logout
+                        </button>
+                    </form>
+                </div>
             </nav>
             <div class="main-panel">
                 <div class="content-wrapper">

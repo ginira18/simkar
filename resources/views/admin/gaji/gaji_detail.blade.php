@@ -7,22 +7,22 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title mb-3">Detail Gaji Karyawan</h4>
-                
-                <!-- Display flash message -->
-                @if(session('success'))
+
+                @if (session('success'))
                     <div class="alert alert-success">
                         {{ session('success') }}
                     </div>
                 @endif
 
-                @if(session('error'))
+                @if (session('error'))
                     <div class="alert alert-danger">
                         {{ session('error') }}
                     </div>
                 @endif
 
-                <form class="row" method="POST" action="{{ route('gaji.give-salary', $employee->id) }}" onsubmit="prepareFormForSubmission()">
-                @csrf
+                <form class="row" method="POST" action="{{ route('gaji.give-salary', $employee->id) }}"
+                    onsubmit="prepareFormForSubmission()">
+                    @csrf
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-sm-4">
@@ -34,6 +34,8 @@
                                 <p class="py-3"><strong>Gaji Pokok</strong></p>
                                 <p class="py-3"><strong>Tunjangan Tetap</strong></p>
                                 <p class="py-3"><strong>Asuransi</strong></p>
+                                <p class="py-3"><strong>Jumlah Hari</strong></p>
+                                <p class="py-3"><strong>Hadir</strong></p>
                                 <p class="py-3"><strong>Tanpa Keterangan</strong></p>
                                 <p class="py-3"><strong>Izin</strong></p>
                                 <p class="py-3"><strong>Terlambat</strong></p>
@@ -59,6 +61,8 @@
                                         : Tidak ada
                                     @endif
                                 </p>
+                                <p class="py-3">: {{ $jumlahHariKerja }}</p>
+                                <p class="py-3">: {{ $hadir }}</p>
                                 <p class="py-3">: {{ $alpha }}</p>
                                 <p class="py-3">: {{ $izin }}</p>
                                 <p class="py-3">: {{ $terlambat }}</p>
@@ -83,23 +87,64 @@
                                 @endif
                             </div>
                         </div>
-                        <label class="col-sm-6 col-form-label">Potongan Kehadiran</label>
-                        <div class="col-sm-6">
-                            <div class="form-group m-0">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Rp.</span>
+
+                        @if ($employee->employee_type == 'monthly')
+                            <label class="col-sm-6 col-form-label">Potongan Asuransi</label>
+                            <div class="col-sm-6">
+                                <div class="form-group m-0">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Rp.</span>
+                                        </div>
+                                        <input type="text" class="form-control" id="insurance_cut" name="cut_insurance"
+                                            value="{{ number_format($potonganAsuransi, 0, ',', '.') }}" readonly>
                                     </div>
-                                    <input type="text" class="form-control" id="attendance_cut" name="cut_attendance"
-                                        value="{{ number_format($potonganKehadiran, 0, ',', '.') }}" readonly>
+                                    @if ($errors->has('cut_insurance'))
+                                        <label class="text-danger">
+                                            {{ $errors->first('cut_insurance') }}
+                                        </label>
+                                    @endif
                                 </div>
-                                @if ($errors->has('cut_attendance'))
-                                    <label class="text-danger">
-                                        {{ $errors->first('cut_attendance') }}
-                                    </label>
-                                @endif
                             </div>
-                        </div>
+                            <label class="col-sm-6 col-form-label">Potongan Kehadiran</label>
+                            <div class="col-sm-6">
+                                <div class="form-group m-0">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Rp.</span>
+                                        </div>
+                                        <input type="text" class="form-control" id="attendance_cut" name="cut_attendance"
+                                            value="{{ number_format($potonganKehadiran + $potonganTerlambat, 0, ',', '.') }}"
+                                            readonly>
+                                    </div>
+                                    @if ($errors->has('cut_attendance'))
+                                        <label class="text-danger">
+                                            {{ $errors->first('cut_attendance') }}
+                                        </label>
+                                    @endif
+                                </div>
+                            </div>
+                        @else
+                            <label class="col-sm-6 col-form-label">Potongan Kehadiran</label>
+                            <div class="col-sm-6">
+                                <div class="form-group m-0">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Rp.</span>
+                                        </div>
+                                        <input type="text" class="form-control" id="attendance_cut"
+                                            name="cut_attendance"
+                                            value="{{ number_format($potonganTerlambat, 0, ',', '.') }}" readonly>
+                                    </div>
+                                    @if ($errors->has('cut_attendance'))
+                                        <label class="text-danger">
+                                            {{ $errors->first('cut_attendance') }}
+                                        </label>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
+
                         <label class="col-sm-3 col-form-label">Bonus Gaji</label>
                         <div class="col-sm-6">
                             <div class="form-group m-0">
@@ -142,7 +187,7 @@
                                         <span class="input-group-text">Rp.</span>
                                     </div>
                                     <input type="text" class="form-control" id="total_salary" name="total_salary"
-                                    value="{{ number_format($totalGaji, 0, ',', '.') }}" readonly>
+                                        value="{{ number_format($totalGaji, 0, ',', '.') }}" readonly>
                                 </div>
                                 @if ($errors->has('total_salary'))
                                     <label class="text-danger">
@@ -151,18 +196,6 @@
                                 @endif
                             </div>
                         </div>
-                        {{-- <label class="col-sm-3 col-form-label">Status Gaji</label>
-                        <div class="col-sm-6">
-                            <div class="form-group m-0">
-                                @if ($employee->salary->status == 'diberikan')
-                                    <label class="badge badge-success">Diberikan</label>
-                                @elseif ($employee->salary->status == 'belum_diberikan')
-                                    <label class="badge badge-danger">Belum diberikan</label>
-                                @else
-                                    <label class="badge badge-warning">Tidak ada data gaji</label>
-                                @endif
-                            </div>
-                        </div> --}}
                         <div class="col-md-12 mt-5">
                             <a href="{{ route('dashboard-gaji.index') }}" class="btn btn-secondary">Kembali</a>
                             <button type="submit" class="btn btn-primary">Berikan Gaji</button>
@@ -174,18 +207,19 @@
     </div>
 
     <script>
-        // Fungsi untuk menambahkan titik pada nominal
+        // titik
         function formatNominal(input) {
-            // Hapus semua karakter selain angka
+            // Hapus karakter selain angka
             var value = input.value.replace(/\D/g, '');
-            // Tambahkan titik sebagai pemisah ribuan
+            //  titik sebagai pemisah ribuan
             input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
 
-        // Fungsi untuk menghitung total gaji
+        // hitung total gaji
         function hitungTotalGaji() {
             var baseSalary = parseInt(document.querySelector('input[name="base_salary"]').value.replace(/\./g, '')) || 0;
-            var fixAllowance = parseInt(document.querySelector('input[name="fix_allowance"]').value.replace(/\./g, '')) || 0;
+            var fixAllowance = parseInt(document.querySelector('input[name="fix_allowance"]').value.replace(/\./g, '')) ||
+                0;
             var cutInsurance = parseInt(document.getElementById('insurance_cut').value.replace(/\./g, '')) || 0;
             var cutAttendance = parseInt(document.getElementById('attendance_cut').value.replace(/\./g, '')) || 0;
             var bonus = parseInt(document.getElementById('bonus').value.replace(/\./g, '')) || 0;
@@ -196,13 +230,16 @@
             document.getElementById('total_salary').value = totalSalary.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
 
-        // Fungsi untuk menghapus pemisah ribuan sebelum form dikirim
+        // hapus format
         function prepareFormForSubmission() {
-            document.getElementById('insurance_cut').value = document.getElementById('insurance_cut').value.replace(/\./g, '');
-            document.getElementById('attendance_cut').value = document.getElementById('attendance_cut').value.replace(/\./g, '');
+            document.getElementById('insurance_cut').value = document.getElementById('insurance_cut').value.replace(/\./g,
+                '');
+            document.getElementById('attendance_cut').value = document.getElementById('attendance_cut').value.replace(/\./g,
+                '');
             document.getElementById('bonus').value = document.getElementById('bonus').value.replace(/\./g, '');
             document.getElementById('cut_salary').value = document.getElementById('cut_salary').value.replace(/\./g, '');
-            document.getElementById('total_salary').value = document.getElementById('total_salary').value.replace(/\./g, '');
+            document.getElementById('total_salary').value = document.getElementById('total_salary').value.replace(/\./g,
+                '');
         }
     </script>
 

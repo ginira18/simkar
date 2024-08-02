@@ -6,6 +6,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Simkar')</title>
     @vite(['resources/css/app.css'])
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container-scroller {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .navbar {
+            flex-shrink: 0;
+        }
+
+        .page-body-wrapper {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 240px;
+            overflow-y: auto;
+        }
+
+        .main-panel {
+            flex: 1;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 
 <body>
@@ -15,30 +50,32 @@
             <div class="navbar-brand-wrapper d-flex align-items-center">
                 <a class="navbar-brand brand-logo" href="#">
                     <img src="{{ Vite::asset('resources/images/logo-abyaz.png') }} " alt="logo" class="logo mt-3"
-                        style="height: 40px;" />
+                        style="height: 30px;" />
                 </a>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-center flex-grow-1">
-                <h3 class="mb-0 font-weight-medium d-none d-lg-flex">Sistem Manajemen Karyawan</h3>
+                <h3 class="mb-0 font-weight-medium d-none d-lg-flex"></h3>
                 <ul class="navbar-nav navbar-nav-right ml-auto">
                     <li class="nav-item dropdown d-none d-xl-inline-flex user-dropdown">
                         <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown"
                             aria-expanded="false">
                             <img class="img-xs rounded-circle ml-2"
                                 src="{{ Vite::asset('resources/images/faces/face8.jpg') }}" alt="Profile image">
-                            <span class="font-weight-normal"> 
-                                {{Auth::user()->employee->name }}
-                             </span></a>
+                            <span class="font-weight-normal">
+                                {{ Auth::user()->employee->name }}
+                            </span></a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                             <div class="dropdown-header text-center">
                                 <img class="img-md rounded-circle"
                                     src="{{ Vite::asset('resources/images/faces/face8.jpg') }}" alt="Profile image">
-                                <p class="mb-1 mt-3">Allen Moreno</p>
-                                <p class="font-weight-light text-muted mb-0">allenmoreno@gmail.com</p>
+                                <p class="mb-1 mt-3"> {{ Auth::user()->employee->name }}
+                                </p>
+                                <p class="font-weight-light text-muted mb-0"> {{ Auth::user()->employee->email }}
+                                </p>
                             </div>
                             <a class="dropdown-item"><i class="dropdown-item-icon icon-user text-primary"></i> My
                                 Profile </a>
-                            <form action="{{ route('logout')}}" method="POST">
+                            <form action="{{ route('logout') }}" method="POST">
                                 @csrf
                                 <button type="submit" class="dropdown-item">
                                     <i class="dropdown-item-icon icon-power text-primary"></i>Logout
@@ -57,12 +94,12 @@
         <div class="container-fluid page-body-wrapper">
             <!-- partial:partials/_sidebar.html -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
-                <ul class="nav">
+                <ul class="nav pb-5">
                     <li class="nav-item nav-category">
                         <span class="nav-link">@yield('title', 'Simkar')</span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('dashboard.index')}}">
+                        <a class="nav-link" href="{{ route('dashboard.index') }}">
                             <span class="menu-title">Dashboard</span>
                             <i class="icon-screen-desktop menu-icon"></i>
                         </a>
@@ -90,12 +127,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href="{{ route ('dashboard-laporan.index')}}">
+                        <a class="nav-link" href="{{ route('dashboard-laporan.index') }}">
                             <span class="menu-title">Laporan Harian</span>
                             <i class="icon-globe menu-icon"></i>
                         </a>
                     </li>
-    
+
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="collapse" href="#gaji" aria-expanded="false"
                             aria-controls="gaji">
@@ -105,23 +142,30 @@
                         <div class="collapse" id="gaji">
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route ('dashboard-gaji.index')}}">Gaji</a>
+                                    <a class="nav-link" href="{{ route('dashboard-gaji.index') }}">Gaji</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route ('dashboard-riwayat_gaji')}}">Riwayat Gaji</a>
+                                    <a class="nav-link" href="{{ route('dashboard-riwayat_gaji') }}">Riwayat Gaji</a>
                                 </li>
                             </ul>
                         </div>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route ('dashboard.rekap')}}">
-                                <span class="menu-title">Rekap Bulanan</span>
-                                <i class="icon-globe menu-icon"></i>
-                            </a>
-                        </li>
+                        <a class="nav-link" href="{{ route('dashboard.rekap') }}">
+                            <span class="menu-title">Rekap Bulanan</span>
+                            <i class="icon-globe menu-icon"></i>
+                        </a>
+                    </li>
                 </ul>
-
+                <div class="logout-item pl-4 pr-4 pt-5" style="margin-top: 180px">
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger btn-block">
+                            <i class="icon-power menu-icon"></i> Logout
+                        </button>
+                    </form>
+                </div>
             </nav>
             <div class="main-panel">
                 <div class="content-wrapper">

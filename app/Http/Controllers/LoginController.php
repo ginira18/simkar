@@ -29,7 +29,7 @@ class LoginController extends Controller
             }
         }
 
-        // Jika login gagal
+        
         return redirect()->back()->with('status_error', 'Email atau password salah')->withInput();
     }
 

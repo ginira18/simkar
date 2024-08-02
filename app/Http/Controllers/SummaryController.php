@@ -41,7 +41,7 @@ class SummaryController extends Controller
 
         $filename = "rekap_gaji_{$month}.csv";
         $handle = fopen($filename, 'w+');
-        fputcsv($handle, ['No', 'Nama', 'NIP', 'Bagian', 'Jabatan', 'Total Gaji Diterima']);
+        fputcsv($handle, ['No', 'Nama', 'NIP', 'Bagian', 'Jabatan','Asuransi','Hadir', 'Alpha', 'Izin', 'Total Gaji Diterima']);
 
         $totalGajiKeseluruhan = 0;
 
@@ -54,11 +54,15 @@ class SummaryController extends Controller
                 $salaryHistory->employee->NIP,
                 $salaryHistory->employee->department->name,
                 $salaryHistory->employee->position,
+                $salaryHistory->employee->bpjs,
+                $salaryHistory->hadir,
+                $salaryHistory->alpha,
+                $salaryHistory->izin,
                 number_format($salaryHistory->total_salary, 0, ',', '.'),
             ]);
         }
 
-        fputcsv($handle, ['Total Gaji Keseluruhan', '', '', '', '', number_format($totalGajiKeseluruhan, 0, ',', '.'), '', '', '', '']);
+        fputcsv($handle, ['Total Gaji Keseluruhan', '', '', '', '','', '', '', '', number_format($totalGajiKeseluruhan, 0, ',', '.'), '', '', '', '']);
 
         fclose($handle);
 

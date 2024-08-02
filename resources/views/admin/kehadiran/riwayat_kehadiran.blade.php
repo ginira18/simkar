@@ -9,11 +9,11 @@
                 <h4 class="card-title">Riwayat Kehadiran</h4>
                 <form action="{{ route('riwayat-kehadiran') }}" method="GET">
                     <div class="row">
-                        <div class="col-md-3 mt-5 ml-auto">
+                        <div class="col-md-3 ml-auto">
                             <input type="search" class="form-control" name="search" placeholder="Cari sesuatu ..."
                                 value="{{ request('search') }}">
                         </div>
-                        <div class="col-md-2 mt-5">
+                        <div class="col-md-2">
                             <button type="submit" class="btn btn-primary">Filter</button>
                         </div>
                     </div>
@@ -61,7 +61,13 @@
                         @endforeach
                     </tbody>
                 </table>
-               <div class="d-flex flex-row-reverse mt-3"> {{ $attendances->links() }}</div>
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <a href="{{ route('dashboard-kehadiran.index') }}" class="btn btn-secondary">Kembali</a>
+
+                    <div class="pagination">
+                        {{ $attendances->links() }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
