@@ -18,7 +18,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-
         // Ambil data total gaji karyawan per bulan untuk chart
         $labels = [];
         $totalSalaries = [];
@@ -38,19 +37,44 @@ class DashboardController extends Controller
             ->whereMonth('created_at', Carbon::now()->subMonth()->month)
             ->sum('total_salary');
 
-        $maleEmployees = Employee::where('gender', 'male')->count();
-        $femaleEmployees = Employee::where('gender', 'female')->count();
+        $maleEmployees = Employee::where('gender', 'male')
+        ->whereDoesntHave('user', function ($query) {
+            $query->where('roles', 'presensi');
+            })
+            ->count();
+
+        $femaleEmployees = Employee::where('gender', 'female')
+            ->whereDoesntHave('user', function ($query) {
+                $query->where('roles', 'presensi');
+            })
+            ->count();
 
         $monthlyEmployees = Employee::where('employee_type', 'monthly')
             ->where('is_active', true)
+            ->whereDoesntHave('user', function ($query) {
+                $query->where('roles', 'presensi');
+            })
             ->count();
 
         $dailyEmployees = Employee::where('employee_type', 'daily')
             ->where('is_active', true)
+            ->whereDoesntHave('user', function ($query) {
+                $query->where('roles', 'presensi');
+            })
             ->count();
-        $totalEmployees = Employee::where('is_active', true)->count();
+
+        $totalEmployees = Employee::where('is_active', true)
+            ->whereDoesntHave('user', function ($query) {
+                $query->where('roles', 'presensi');
+            })
+            ->count();
+
         $totalPermissionRequests = Permission::where('status', 'pending')->count();
-        $activeDepartments = Department::withCount('employees')->get();
+        $activeDepartments = Department::withCount(['employees' => function ($query) {
+            $query->whereHas('user', function ($query) {
+                $query->where('roles', '!=', 'presensi');
+            });
+        }])->get();
 
         return view('admin.dashboard', [
             'labels' => $labels,
@@ -66,6 +90,7 @@ class DashboardController extends Controller
             'dailyEmployees' => $dailyEmployees,
         ]);
     }
+
 
     // public function index_karyawan()
     // {

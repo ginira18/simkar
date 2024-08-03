@@ -97,7 +97,7 @@
                                 <form class="ml-3" action="{{ route('karyawan.reset', $employee->id) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="btn btn-info"
-                                        onclick="return confirm('Apakah Anda yakin ingin mereset akun karyawan ini?')">Reset
+                                        onclick="return confirm('Apakah Anda yakin ingin mereset akun karyawan ini?, Catat Email terlebih dahulu!!!')">Reset
                                         Akun</button>
                                 </form>
                             </div>
@@ -209,13 +209,15 @@
                                     <button type="submit" class="btn btn-secondary m-1">Non-aktif</button>
                                 </form>
 
-                                <form action="{{ route('karyawan.destroy', $employee->id) }}" method="POST"
-                                    style="display:inline;">
-                                    @csrf
-                                    @method('delete')
-                                    <button type="submit" class="btn btn-danger"
-                                        onclick="return confirm('Apakah Anda yakin ingin menghapus data karyawan ini?')">Hapus</button>
-                                </form>
+                                @if (auth()->user()->id !== $employee->id)
+                                    <form action="{{ route('karyawan.destroy', $employee->id) }}" method="POST"
+                                        style="display:inline;">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="submit" class="btn btn-danger"
+                                            onclick="return confirm('Apakah Anda yakin ingin menghapus data karyawan ini?')">Hapus</button>
+                                    </form>
+                                @endif
                             </div>
                         </div>
                     </div>

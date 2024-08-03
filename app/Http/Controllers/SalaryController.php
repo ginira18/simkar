@@ -33,7 +33,10 @@ class SalaryController extends Controller
         $employeeType = $request->input('employee_type');
         $salaryStatus = $request->input('salary_status');
 
-        $query = Employee::with(['department', 'salary']);
+        $query = Employee::with(['department', 'salary'])
+            ->whereDoesntHave('user', function ($query) {
+                $query->where('roles', 'presensi');
+            });
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -71,6 +74,7 @@ class SalaryController extends Controller
             'salaryStatus' => $salaryStatus,
         ]);
     }
+
 
     private function fetchHolidays($params = [])
     {
@@ -174,6 +178,9 @@ class SalaryController extends Controller
             $totalGaji = $employee->salary->base_salary + $employee->salary->fix_allowance - $potonganTerlambat - $potonganKehadiran - $potonganAsuransi;
         } elseif ($employee->employee_type == 'daily') {
             $totalGaji = ($employee->salary->base_salary * $hadir) - $potonganTerlambat;
+        }
+        if ($totalGaji < 0) {
+            $totalGaji = $employee->salary->base_salary + $employee->salary->fix_allowance;
         }
         session([
             'attendance_data' => [

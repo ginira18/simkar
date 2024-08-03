@@ -19,17 +19,20 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
-            if ($user->roles == 'admin') {
-                return redirect()->intended('dashboard')->with('status_success', 'Login berhasil');
-            } elseif ($user->roles == 'pegawai') {
-                return redirect()->intended('dashboard-karyawan')->with('status_success', 'Login berhasil');
-            } else {
-                Auth::logout();
-                return redirect()->back()->with('status_error', 'Anda tidak memiliki akses')->withInput();
+            switch ($user->roles) {
+                case 'admin':
+                    return redirect()->intended('dashboard')->with('status_success', 'Login berhasil');
+                case 'pegawai':
+                    return redirect()->intended('dashboard-karyawan')->with('status_success', 'Login berhasil');
+                case 'presensi':
+                    return redirect()->intended('presensi');
+                default:
+                    Auth::logout();
+                    return redirect()->back()->with('status_error', 'Anda tidak memiliki akses')->withInput();
             }
         }
 
-        
+
         return redirect()->back()->with('status_error', 'Email atau password salah')->withInput();
     }
 

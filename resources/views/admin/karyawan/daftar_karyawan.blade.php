@@ -5,8 +5,8 @@
     <div class="m-1">
         <div class="card rounded justify-content">
             <div class="page-header d-flex justify-content-between align-items-center">
-                <h4 class="card-title mt-5 ml-4">Daftar Karyawan</h4>
-                <a class="btn btn-primary mt-5 mr-4" href='{{ route('karyawan.create') }}'>Tambah Karyawan</a>
+                <h4 class="card-title ml-4">Daftar Karyawan</h4>
+                <a class="btn btn-primary mt-4 mr-4" href='{{ route('karyawan.create') }}'>Tambah Karyawan</a>
             </div>
             @if (session('success'))
                 <div class="alert alert-success" role="alert">
@@ -16,11 +16,11 @@
             <div>
                 <form action="{{ route('karyawan.index') }}" method="GET">
                     <div class="row">
-                        <div class="col-md-3 mt-5 ml-auto">
+                        <div class="col-md-3 mt-2 ml-auto">
                             <input type="search" class="form-control" name="search" placeholder="Cari sesuatu ..."
                                 value="{{ request('search') }}">
                         </div>
-                        <div class="col-md-2 mt-5">
+                        <div class="col-md-2 mt-2">
                             <button type="submit" class="btn btn-primary">Filter</button>
                         </div>
                     </div>

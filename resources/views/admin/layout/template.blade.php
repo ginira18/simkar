@@ -34,6 +34,8 @@
         .sidebar {
             width: 240px;
             overflow-y: auto;
+            overflow: hidden;
+
         }
 
         .main-panel {
@@ -73,8 +75,8 @@
                                 <p class="font-weight-light text-muted mb-0"> {{ Auth::user()->employee->email }}
                                 </p>
                             </div>
-                            <a class="dropdown-item"><i class="dropdown-item-icon icon-user text-primary"></i> My
-                                Profile </a>
+                            {{-- <a class="dropdown-item"><i class="dropdown-item-icon icon-user text-primary"></i> My
+                                Profile </a> --}}
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
                                 <button type="submit" class="dropdown-item">

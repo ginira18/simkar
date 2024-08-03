@@ -11,12 +11,15 @@ use App\Models\User;
 
 class EmployeeController extends Controller
 {
-    
+
     public function index(Request $request)
     {
         $search = $request->input('search');
 
         $activeEmployees = Employee::where('is_active', true)
+            ->whereDoesntHave('user', function ($query) {
+                $query->where('roles', 'presensi');
+            })
             ->when($search, function ($query, $search) {
                 return $query->where('name', 'like', "%{$search}%")
                     ->orWhere('NIP', 'like', "%{$search}%")
@@ -64,10 +67,10 @@ class EmployeeController extends Controller
             'hire_date_end' => 'required|date',
             'position' => 'required',
             'employee_type' => 'required',
-            'base_salary' => 'required',
-            'fix_allowance' => 'required',
+            'base_salary' => 'required |max:13',
+            'fix_allowance' => 'required |max:13',
             'bpjs' => 'required',
-            'rfid_number' => 'unique:employees |numeric',
+            'rfid_number' => 'unique:employees|numeric',
             'department_id' => 'required|exists:departments,id',
         ]);
 
@@ -111,7 +114,6 @@ class EmployeeController extends Controller
     public function show($id)
     {
         $employee = Employee::findOrFail($id);
-        // dd($employee);
 
         return view('admin.karyawan.detail_karyawan', [
             "employee" => $employee
@@ -161,8 +163,8 @@ class EmployeeController extends Controller
             'hire_date_end' => 'required|date',
             'position' => 'required',
             'employee_type' => 'required',
-            'base_salary' => 'required',
-            'fix_allowance' => 'required',
+            'base_salary' => 'required |max:13',
+            'fix_allowance' => 'required |max:13',
             'bpjs' => 'required',
             'rfid_number' => 'unique:employees,rfid_number,' . $id,
             'department_id' => 'required|exists:departments,id',
@@ -224,13 +226,16 @@ class EmployeeController extends Controller
      */
     public function destroy($id)
     {
-        // Employee::destroy($employee->id);
-        // return redirect('/karyawan')->with('success', 'Data Karyawan Berhasil Dihapus');
         $employee = Employee::findOrFail($id);
+
+        if (auth()->user()->id == $employee->id) {
+            return redirect()->back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
         $employee->delete();
         return redirect('karyawan')->with('success', 'Data Karyawan Berhasil Dihapus');
     }
- 
+
     public function reset($id)
     {
         $employee = Employee::find($id);

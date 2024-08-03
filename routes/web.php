@@ -99,9 +99,11 @@
         Route::get('/gaji/slip/{id}', [SalaryController::class, 'slip'])->name('gaji.slip');
     });
 
-    // presensi
-    Route::get('/presensi', [AttendanceController::class, 'presensi_guest_create'])->name('presensi');
-    Route::post('/presensi', [AttendanceController::class, 'presensi_guest_store'])->name('presensi');
+    Route::middleware('presensi')->group(function () {
+        // presensi
+        Route::get('/presensi', [AttendanceController::class, 'presensi_guest_create'])->name('presensi');
+        Route::post('/presensi', [AttendanceController::class, 'presensi_guest_store'])->name('presensi');
+    });
 
     // Register
     Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register')->middleware('guest');

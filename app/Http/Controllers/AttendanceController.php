@@ -377,7 +377,7 @@ class AttendanceController extends Controller
 
         $employee = Employee::where('rfid_number', $request->nip_or_rf_id)->orWhere('NIP', $request->nip_or_rf_id)->first();
         if (!$employee) {
-            return redirect(route("presensi.create"))->with('status_error', "Data karyawan tidak ditemukan!");
+            return redirect(route("presensi"))->with('status_error', "Data karyawan tidak ditemukan!");
         }
         $attendance = Attendance::where('employee_id', $employee->id)->whereDate('date', now())->first();
         // if ($attendance && $attendance->check_out != null) {
@@ -386,7 +386,7 @@ class AttendanceController extends Controller
 
         if ($attendance) {
             if (now()->diffInSeconds($attendance->check_in) < 1) {
-                return redirect(route("presensi.create"))->with('status_error', "Karyawan sudah melakukan absen hari ini!");
+                return redirect(route("presensi"))->with('status_error', "Karyawan sudah melakukan absen hari ini!");
             }
             $attendance->update([
                 'check_out' => now(),
@@ -399,6 +399,6 @@ class AttendanceController extends Controller
                 'status' => 'hadir',
             ]);
         }
-        return redirect(route("presensi.create"))->with('status_success', "Absen berhasil!");
+        return redirect(route("presensi"))->with('status_success', "Absen berhasil!");
     }
 }

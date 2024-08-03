@@ -122,34 +122,44 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             @if (session('status_success'))
                 var employeeName = @json(session('employee_name'));
                 $('#employeeName').text(employeeName);
                 $('#attendanceModal').modal('show');
-                
+
                 setTimeout(function() {
                     $('#attendanceModal').addClass('animate__fadeOut');
                     setTimeout(function() {
                         $('#attendanceModal').modal('hide');
                         $('#attendanceModal').removeClass('animate__fadeOut');
-                    }, 1000); 
+                    }, 1000);
                 }, 3000);
             @endif
-    
+
             @if (session('status_error'))
                 var errorMessage = @json(session('status_error'));
                 $('#errorMessage').text(errorMessage);
                 $('#errorModal').modal('show');
-                
+
                 setTimeout(function() {
                     $('#errorModal').addClass('animate__fadeOut');
                     setTimeout(function() {
                         $('#errorModal').modal('hide');
                         $('#errorModal').removeClass('animate__fadeOut');
-                    }, 1000); 
+                    }, 1000);
                 }, 3000);
             @endif
+
+            // Set focus to the input field when the modal is hidden
+            $('#attendanceModal').on('hidden.bs.modal', function() {
+                $('#id_attendance').focus();
+            });
+
+            $('#errorModal').on('hidden.bs.modal', function() {
+                $('#id_attendance').focus();
+            });
         });
     </script>
+
 @endsection

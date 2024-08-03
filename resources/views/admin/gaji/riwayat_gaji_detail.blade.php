@@ -121,6 +121,7 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="col-md-12 mt-4">
                             <a href="{{ route ('dashboard-riwayat_gaji')}}" class="btn btn-secondary">Kembali</a>
                             <a href="{{ route('history_salary.slip', $salaryHistory->id) }}" class="btn btn-primary">Lihat Slip
